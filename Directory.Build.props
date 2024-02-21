@@ -1,0 +1,82 @@
+<Project InitialTargets="InitializeProps" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="Sdk.props" Sdk="Sigurd.Thunderstore.Sdk" />
+    
+    <!-- Build configurations -->
+    <PropertyGroup>
+        <Configurations>Debug;Release;BuildTasks</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <!-- compiler/msbuild switches -->
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NoWarn>$(NoWarn);1701;1702;0436</NoWarn>
+        <DebugType>embedded</DebugType>
+        <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
+    </PropertyGroup>
+
+    <!-- NuGet metadata -->
+    <PropertyGroup>
+        <Authors>Lordfirespeed</Authors>
+        <Company>Sigurd Team</Company>
+        <IsPackable>false</IsPackable>
+        <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/lc-sigurd/Sigurd</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
+    <!-- Thunderstore metadata -->
+    <PropertyGroup>
+        <IsThunderstorePackable>false</IsThunderstorePackable>
+        <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
+        <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
+        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)/../README.md</ThunderstoreReadmePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)assets/bundles" Destination="BepInEx/plugins/$(ProjectName)/bundles"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../LICENSE" Destination="/"/>
+        <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="misc"/>
+        <ThunderstoreDependency Include="BepInEx-BepInExPack" Version="5.4.2100" Reference="false" />
+    </ItemGroup>
+
+    <!-- .NET Framework (.NET 4) reference assemblies  -->
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <!-- MinVer -->
+    <PropertyGroup>
+        <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="MinVer" Version="4.3.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <SetThunderstorePackageVersionTargetName Include="SetThunderstorePackageVersion" />
+    </ItemGroup>
+
+    <!-- Release optimisations -->
+    <PropertyGroup Condition="$(Configuration) == 'Release'">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <!-- Import local user props -->
+    <Import Project="$(SolutionDir)AvaloniaBepInExConsole.props.user" Condition="$(CI) != 'true'"/>
+
+    <!-- Dummy target to execute 'initially' -->
+    <Target Name="InitializeProps" />
+</Project>
