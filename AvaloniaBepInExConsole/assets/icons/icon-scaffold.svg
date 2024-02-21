@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 0.48 0.48"
+   version="1.1"
+   fill="none"
+   stroke="#000000"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-width="1.5"
+   id="svg1"
+   sodipodi:docname="icon-scaffold.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#2e294e"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:export-bgcolor="#2e294eff"
+     inkscape:zoom="22.627417"
+     inkscape:cx="3.1377863"
+     inkscape:cy="14.915534"
+     inkscape:window-width="3440"
+     inkscape:window-height="1403"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1" />
+  <rect
+     height="0.315"
+     width="0.375"
+     y="0.082500003"
+     x="0.052499998"
+     id="rect1"
+     style="stroke-width:0.03;stroke-dasharray:none;stroke:#1b998b;stroke-opacity:1;stroke-miterlimit:10" />
+  <path
+     d="m 0.2625,0.3075 h 0.075 M 0.1425,0.1725 0.2175,0.24 0.1425,0.3075"
+     id="path1"
+     style="stroke-width:0.03;stroke-dasharray:none;stroke:#f46036;stroke-opacity:1" />
+</svg>
