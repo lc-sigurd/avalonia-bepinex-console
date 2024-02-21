@@ -39,7 +39,11 @@
 !/AvaloniaBepInExConsole
 /AvaloniaBepInExConsole/[Bb]in
 /AvaloniaBepInExConsole/[Oo]bj
-/AvaloniaBepInExConsole/[Dd]ist
+
+### AvaloniaBepInExConsole Project
+!/AvaloniaBepInExConsole.App
+/AvaloniaBepInExConsole.App/[Bb]in
+/AvaloniaBepInExConsole.App/[Oo]bj
 
 # Explicit exceptions/ignores
 **.user

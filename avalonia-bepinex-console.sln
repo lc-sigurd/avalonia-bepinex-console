@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole", "AvaloniaBepInExConsole\AvaloniaBepInExConsole.csproj", "{5DCE84CB-315F-4CEB-9726-772CBD421FFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.App", "AvaloniaBepInExConsole.App\AvaloniaBepInExConsole.App.csproj", "{DE413463-7880-4717-973A-4AC6ED2AF4F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{5DCE84CB-315F-4CEB-9726-772CBD421FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DCE84CB-315F-4CEB-9726-772CBD421FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DCE84CB-315F-4CEB-9726-772CBD421FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
