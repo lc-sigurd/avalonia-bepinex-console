@@ -14,4 +14,8 @@
         <RootNamespace>Sigurd.AvaloniaBepInExConsole</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Include="$(ProjectDir)../AvaloniaBepInExConsole.App/bin/$(Configuration)App/*/$(RuntimeIdentifier)/com.sigurd.avalonia_bepinex_console.app*" Exclude="**/*.dll;**/*.json;**/*.pdb" Destination="BepInEx/plugins/$(ProjectName)/" />
+    </ItemGroup>
+
 </Project>
