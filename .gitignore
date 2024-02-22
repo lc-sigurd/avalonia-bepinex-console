@@ -35,15 +35,10 @@
 ## Solution
 !avalonia-bepinex-console.sln
 
-### AvaloniaBepInExConsole Project
-!/AvaloniaBepInExConsole
-/AvaloniaBepInExConsole/[Bb]in
-/AvaloniaBepInExConsole/[Oo]bj
-
-### AvaloniaBepInExConsole Project
-!/AvaloniaBepInExConsole.App
-/AvaloniaBepInExConsole.App/[Bb]in
-/AvaloniaBepInExConsole.App/[Oo]bj
+### AvaloniaBepInExConsole Projects
+!/AvaloniaBepInExConsole*
+/AvaloniaBepInExConsole*/[Bb]in
+/AvaloniaBepInExConsole*/[Oo]bj
 
 # Explicit exceptions/ignores
 **.user
