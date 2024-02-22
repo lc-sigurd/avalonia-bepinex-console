@@ -4,13 +4,13 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>com.sigurd.avalonia_bepinex_console</AssemblyName>
         <Product>Avalonia BepInEx Console</Product>
-        
+
         <IsThunderstorePackable>true</IsThunderstorePackable>
-        <ThunderstoreName>Avalonia_BepInEx_Console</ThunderstoreName>
+        <ThunderstoreName>Avalonia_BepInEx_Console_$(RuntimeIdentifier)</ThunderstoreName>
         <ThunderstoreDescription>Adds a log output window built using the Avalonia framework.</ThunderstoreDescription>
         <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
         <HasBepInPlugin>false</HasBepInPlugin>
-        
+
         <RootNamespace>Sigurd.AvaloniaBepInExConsole</RootNamespace>
     </PropertyGroup>
 
