@@ -1,6 +1,6 @@
 <Project InitialTargets="InitializeProps" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="Sdk.props" Sdk="Sigurd.Thunderstore.Sdk" />
-    
+
     <!-- Build configurations -->
     <PropertyGroup>
         <Configurations>Debug;Release;BuildTasks</Configurations>
