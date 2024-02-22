@@ -4,7 +4,7 @@
     <!-- Build configurations -->
     <PropertyGroup>
         <Configurations>Debug;Release;ReleaseApp;DebugApp</Configurations>
-        <Platforms>AnyCPU</Platforms>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <!-- compiler/msbuild switches -->
@@ -15,7 +15,6 @@
         <NoWarn>$(NoWarn);1701;1702;0436</NoWarn>
         <DebugType>embedded</DebugType>
         <ClearCopyLocalPaths>true</ClearCopyLocalPaths>
-        <RuntimeIdentifier Condition="$(RuntimeIdentifier) == ''">win-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <!-- NuGet metadata -->

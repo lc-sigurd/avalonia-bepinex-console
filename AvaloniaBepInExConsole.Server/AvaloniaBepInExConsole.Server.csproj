@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>com.sigurd.avalonia_bepinex_console.server</AssemblyName>
+        <Product>Avalonia BepInEx Console Server</Product>
+
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+        <ThunderstoreName>Avalonia_BepInEx_Console_Server</ThunderstoreName>
+        <ThunderstoreDescription>Adds a log output window built using the Avalonia framework.</ThunderstoreDescription>
+        <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
+        <HasBepInPlugin>true</HasBepInPlugin>
+
+        <RootNamespace>Sigurd.AvaloniaBepInExConsole</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PreThunderstoreGenTargetName Include="AddDependencyAssemblyCopyPaths" />
+    </ItemGroup>
+
+    <!-- Development dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Runtime dependencies -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="NetMQ" Version="4.0.1.13" />
+    </ItemGroup>
+
+    <Target Name="AddDependencyAssemblyCopyPaths">
+        <ItemGroup>
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="NetMQ"/>
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="AsyncIO"/>
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="NaCl"/>
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ServiceModel.Primitives"/>
+            <!-- IncludeInThunderstorePackageDependencyAssemblyName Include="System.ServiceModel"/ -->
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ValueTuple"/>
+        </ItemGroup>
+
+        <ItemGroup>
+            <IncludeInThunderstorePackageDependencyAssemblyPath Include="@(ReferencePathWithRefAssemblies)">
+                <CompareName>%(IncludeInThunderstorePackageDependencyAssemblyName.Identity)</CompareName>
+            </IncludeInThunderstorePackageDependencyAssemblyPath>
+            <IncludeInThunderstorePackageDependencyAssemblyPath Remove="@(IncludeInThunderstorePackageDependencyAssemblyPath)" Condition="%(FileName) != %(CompareName)"/>
+        </ItemGroup>
+
+        <ItemGroup>
+            <ThunderstoreBuildCopyPath Include="@(IncludeInThunderstorePackageDependencyAssemblyPath)" Destination="BepInEx/core/$(ProjectName)/" />
+        </ItemGroup>
+    </Target>
+
+</Project>

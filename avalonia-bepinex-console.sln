@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole", "AvaloniaBepInExConsole\AvaloniaBepInExConsole.csproj", "{5DCE84CB-315F-4CEB-9726-772CBD421FFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.Server", "AvaloniaBepInExConsole.Server\AvaloniaBepInExConsole.Server.csproj", "{5DCE84CB-315F-4CEB-9726-772CBD421FFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.App", "AvaloniaBepInExConsole.App\AvaloniaBepInExConsole.App.csproj", "{DE413463-7880-4717-973A-4AC6ED2AF4F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.Patcher", "AvaloniaBepInExConsole.Patcher\AvaloniaBepInExConsole.Patcher.csproj", "{7E810582-C81E-48C8-9D7D-5E08DC6D348B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +26,11 @@ Global
 		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.ReleaseApp|Any CPU.Build.0 = ReleaseApp|Any CPU
 		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.DebugApp|Any CPU.ActiveCfg = DebugApp|Any CPU
 		{DE413463-7880-4717-973A-4AC6ED2AF4F6}.DebugApp|Any CPU.Build.0 = DebugApp|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.ReleaseApp|Any CPU.ActiveCfg = ReleaseApp|Any CPU
+		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.DebugApp|Any CPU.ActiveCfg = DebugApp|Any CPU
 	EndGlobalSection
 EndGlobal

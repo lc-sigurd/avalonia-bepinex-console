@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>com.sigurd.avalonia_bepinex_console.app</AssemblyName>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <PublishSingleFile>true</PublishSingleFile>
-        <SelfContained>true</SelfContained>
         <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
     </PropertyGroup>
 
@@ -15,7 +13,6 @@
         <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
-
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.6"/>
@@ -25,5 +22,6 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
+        <PackageReference Include="NetMQ" Version="4.0.1.13" />
     </ItemGroup>
 </Project>
