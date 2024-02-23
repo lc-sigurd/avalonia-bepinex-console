@@ -15,6 +15,81 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <!-- Content -->
+    <Grid Name="RootGrid">
+
+        <!-- Rows -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Toolbar -->
+            <RowDefinition Height="*" /> <!-- Log list -->
+            <RowDefinition Height="Auto" /> <!-- Footer-->
+        </Grid.RowDefinitions>
+
+        <!-- Columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" /> <!-- Log list -->
+            <ColumnDefinition Width="Auto" /> <!-- Sidebar -->
+        </Grid.ColumnDefinitions>
+
+        <Panel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="Toolbar">
+            <TextBlock Text="Toolbar" />
+        </Panel>
+
+        <Grid Grid.Row="1" Grid.Column="0" Name="LogListBoxContainer">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Header -->
+                <RowDefinition Height="*" MinHeight="100"/> <!-- Logs -->
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Panel Grid.Row="0" Grid.Column="0" Name="LogHeader">
+                <TextBlock Text="LogHeader" />
+            </Panel>
+
+            <!-- ListBox -->
+            <ListBox
+                Grid.Row="1"
+                Grid.Column="0"
+                Name="LogListBox"
+                AutoScrollToSelectedItem="False"
+                Focusable="False"
+                BorderThickness="0"
+                CornerRadius="0"
+                HorizontalAlignment="Stretch"
+                ItemsSource="{Binding TestLogMessages}"
+            >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!-- can't bind inlines, see here for workarounds https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines -->
+                        <TextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontWeight="ExtraLight" FontSize="15" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+                <ListBox.ItemContainerTheme>
+                    <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="IsHitTestVisible" Value="False" />
+                        <Setter Property="ClipToBounds" Value="False" />
+                        <Setter Property="Margin" Value="0,0" />
+                        <Setter Property="Padding" Value="0" />
+                    </ControlTheme>
+                </ListBox.ItemContainerTheme>
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel  />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </Grid>
+
+        <Panel Grid.Row="1" Grid.Column="1" Name="Sidebar" />
+
+        <Panel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Name="StatusBar">
+            <TextBlock Text="Footer" />
+        </Panel>
+
+    </Grid>
 
 </Window>
