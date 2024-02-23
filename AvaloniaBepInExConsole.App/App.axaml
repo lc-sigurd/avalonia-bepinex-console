@@ -14,6 +14,6 @@
     </Application.Styles>
 
     <Application.Resources>
-        <FontFamily x:Key="JetBrainsMonoFont">avares://AvaloniaBepInExConsole.App/Assets/Fonts/JetBrainsMono#JetBrains Mono</FontFamily>
+        <FontFamily x:Key="JetBrainsMonoFont">avares://AvaloniaBepInExConsole.App/Assets/Fonts/JetBrainsMono#JetBrains Mono NL</FontFamily>
     </Application.Resources>
 </Application>
