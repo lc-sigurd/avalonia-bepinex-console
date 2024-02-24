@@ -1,18 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:AvaloniaBepInExConsole.App.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Sigurd.AvaloniaBepInExConsole.App.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="AvaloniaBepInExConsole.App.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:Class="Sigurd.AvaloniaBepInExConsole.App.Views.MainWindow"
+        x:DataType="viewModels:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaBepInExConsole.App">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <viewModels:MainWindowViewModel/>
     </Design.DataContext>
 
     <!-- Content -->
@@ -32,7 +32,9 @@
         </Grid.ColumnDefinitions>
 
         <Panel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="Toolbar">
-            <TextBlock Text="Toolbar" />
+            <StackPanel>
+                <TextBlock Text="Toolbar" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
+            </StackPanel>
         </Panel>
 
         <Grid Grid.Row="1" Grid.Column="0" Name="LogListBoxContainer">
@@ -57,12 +59,12 @@
                 BorderThickness="0"
                 CornerRadius="0"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding TestLogMessages}"
+                ItemsSource="{Binding LogMessages}"
             >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <!-- can't bind inlines, see here for workarounds https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines -->
-                        <TextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontWeight="ExtraLight" FontSize="15" />
+                        <TextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 

@@ -1,4 +1,4 @@
-namespace AvaloniaBepInExConsole.App.Logs;
+namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
 public class LogMessage
 {

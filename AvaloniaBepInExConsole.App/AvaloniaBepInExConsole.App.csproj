@@ -6,6 +6,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
+        <RootNamespace>Sigurd.AvaloniaBepInExConsole.App</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,5 +23,6 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
         <PackageReference Include="NetMQ" Version="4.0.1.13"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
     </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using AvaloniaBepInExConsole.App.ViewModels;
+using Sigurd.AvaloniaBepInExConsole.App.ViewModels;
 
-namespace AvaloniaBepInExConsole.App;
+namespace Sigurd.AvaloniaBepInExConsole.App;
 
 public class ViewLocator : IDataTemplate
 {

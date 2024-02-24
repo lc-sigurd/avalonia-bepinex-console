@@ -1,8 +1,8 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.ReactiveUI;
-using System;
 
-namespace AvaloniaBepInExConsole.App;
+namespace Sigurd.AvaloniaBepInExConsole.App;
 
 sealed class Program
 {

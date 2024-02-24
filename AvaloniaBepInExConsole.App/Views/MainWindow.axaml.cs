@@ -1,8 +1,8 @@
 using Avalonia.ReactiveUI;
-using AvaloniaBepInExConsole.App.ViewModels;
 using ReactiveUI;
+using Sigurd.AvaloniaBepInExConsole.App.ViewModels;
 
-namespace AvaloniaBepInExConsole.App.Views;
+namespace Sigurd.AvaloniaBepInExConsole.App.Views;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {

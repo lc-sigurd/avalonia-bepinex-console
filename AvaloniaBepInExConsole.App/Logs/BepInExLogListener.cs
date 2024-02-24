@@ -3,69 +3,48 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
+using Microsoft.Extensions.Hosting;
 using NetMQ;
 using NetMQ.Sockets;
 
-namespace AvaloniaBepInExConsole.App.Logs;
+namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
-public class BepInExLogListener : IDisposable
+public class BepInExLogListener : BackgroundService
 {
-    private NetMQPoller? _poller;
-
     public SourceList<LogMessage> LogMessages { get; } = new();
 
-    public BepInExLogListener()
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        new Thread(ReceiveMessages).Start();
+        using var runtime = new NetMQRuntime();
+        runtime.Run(stoppingToken, ReceiveMessagesAsync(stoppingToken));
+        return Task.CompletedTask;
     }
 
-    void ReceiveMessages()
+    async Task ReceiveMessagesAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("Setting up subscriber");
+        Console.WriteLine("Starting subscriber");
         using var subscriber = new SubscriberSocket("@tcp://localhost:38554");
-        Console.WriteLine("Set up subscriber");
-        _poller = new NetMQPoller();
-        try {
-            _poller.Add(subscriber);
-            var newLogs = new LinkedList<LogMessage>();
-            int batchIndex;
 
-            subscriber.Subscribe("");
-            subscriber.ReceiveReady += (_, args) => {
-                newLogs.Clear();
+        subscriber.Subscribe("");
+        var newLogs = new LinkedList<LogMessage>();
 
-                for (batchIndex = 0; batchIndex < 100; batchIndex++) {
-                    if (!args.Socket.TryReceiveFrameString(out var message))
-                        break;
+        while (true) {
+            try {
+                var (message, more) = await subscriber.ReceiveFrameStringAsync(cancellationToken);
+                newLogs.AddLast(new LogMessage(message));
+                Console.WriteLine(message);
 
-                    newLogs.AddLast(new LogMessage(message));
-                    Console.WriteLine(message);
-                }
+                if (more && newLogs.Count < 100) continue;
 
                 LogMessages.AddRange(newLogs);
                 Console.WriteLine(LogMessages.Count);
-            };
-
-            Console.WriteLine("Running poller");
-            _poller.Run();
+                newLogs.Clear();
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception exc) {
+                Console.WriteLine(exc);
+                // todo: log
+            }
         }
-        finally {
-            Console.WriteLine("Disposing of subscriber");
-            _poller.Dispose();
-            _poller = null;
-        }
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing) {
-            if (_poller is { IsRunning: true }) _poller.Stop();
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ReactiveUI;
 
-namespace AvaloniaBepInExConsole.App.ViewModels;
+namespace Sigurd.AvaloniaBepInExConsole.App.ViewModels;
 
 public class ViewModelBase : ReactiveObject { }

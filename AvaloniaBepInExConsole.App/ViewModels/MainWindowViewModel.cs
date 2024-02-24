@@ -1,35 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Disposables;
-using AvaloniaBepInExConsole.App.Logs;
 using DynamicData;
-using ReactiveUI;
+using Sigurd.AvaloniaBepInExConsole.App.Logs;
 
-namespace AvaloniaBepInExConsole.App.ViewModels;
+namespace Sigurd.AvaloniaBepInExConsole.App.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase, IActivatableViewModel
+public class MainWindowViewModel : ViewModelBase
 {
-    public ViewModelActivator Activator { get; }
-
-    private ReadOnlyObservableCollection<LogMessage>? _logMessages;
-    public ReadOnlyObservableCollection<LogMessage>? LogMessages => _logMessages;
+    private readonly ReadOnlyObservableCollection<LogMessage> _logMessages;
+    public ReadOnlyObservableCollection<LogMessage> LogMessages => _logMessages;
 
     public ObservableCollection<LogMessage> TestLogMessages { get; } = new(Enumerable.Repeat(new LogMessage("the quick brown fox jumps over the lazy dog 0123456789"), 150));
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(BepInExLogListener logListener)
     {
-        Activator = new ViewModelActivator();
-
-        this.WhenActivated(disposables => {
-
-            var logListener = new BepInExLogListener()
-                .DisposeWith(disposables);
-
-            logListener.LogMessages.Connect()
-                .Bind(out _logMessages)
-                .Subscribe();
-
-        });
+        logListener.LogMessages.Connect()
+            .Bind(out _logMessages)
+            .Subscribe();
     }
 }
