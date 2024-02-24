@@ -48,7 +48,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
     private void PublishLogMessage(LogEventArgs logEventArgs)
     {
         EnsureSocketAlive();
+#if DEBUG
         logger.LogDebug($"Publishing message: {logEventArgs}");
+#endif
         _publisherSocket.SendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
     }
 

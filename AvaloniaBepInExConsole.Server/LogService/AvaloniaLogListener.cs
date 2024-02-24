@@ -17,9 +17,9 @@ public class AvaloniaLogListener : ILogListener
     {
         if (eventArgs.Source == _logger)
             return;
-
+#if DEBUG
         _logger.LogDebug($"Queueing message: {eventArgs}");
-
+#endif
         _taskQueue.QueueAsync(eventArgs)
             .GetAwaiter()
             .GetResult();
