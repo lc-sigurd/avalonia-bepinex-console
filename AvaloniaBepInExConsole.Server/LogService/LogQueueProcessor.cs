@@ -42,7 +42,7 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
             }
             catch (OperationCanceledException) { }
             catch (Exception exc) {
-                // todo: log :joy:
+                logger.LogError($"Encountered exception while trying to publish a message\n{exc}");
             }
         }
     }
