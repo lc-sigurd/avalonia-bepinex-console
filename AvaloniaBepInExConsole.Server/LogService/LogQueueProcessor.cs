@@ -16,6 +16,8 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _publisherSocket = new PublisherSocket(">tcp://localhost:38554");
+        // https://github.com/zeromq/netmq/issues/482
+        await Task.Delay(500, stoppingToken);
         await ProcessLogQueueAsync(stoppingToken);
     }
 
