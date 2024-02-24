@@ -53,7 +53,7 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #if DEBUG
         logger.LogDebug($"Publishing message: {logEventArgs}");
 #endif
-        _publisherSocket.SendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
+        _publisherSocket.TrySendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
     }
 
     [MemberNotNullWhen(true, nameof(_publisherSocket))]
