@@ -15,13 +15,18 @@ internal static class LogListenerBootstrap
     [UsedImplicitly]
     static void Start()
     {
+        var logger = Logger.CreateLogSource("Avalonia Console Server");
+        var internalLogger = Logger.CreateLogSource("Avalonia Console Server/Internal");
+
         _queue = new DefaultLogMessageQueue(32);
-        _processor = new LogQueueProcessor(_queue);
-        _listener = new AvaloniaLogListener(_queue);
+        _processor = new LogQueueProcessor(_queue, internalLogger);
+        _listener = new AvaloniaLogListener(_queue, internalLogger);
 
         Logger.Listeners.Add(_listener);
+        logger.LogInfo("Listener initialised");
 
         var cts = new CancellationTokenSource();
         Task.Run(() => _processor.StartAsync(cts.Token), cts.Token);
+        logger.LogInfo("Processor started");
     }
 }

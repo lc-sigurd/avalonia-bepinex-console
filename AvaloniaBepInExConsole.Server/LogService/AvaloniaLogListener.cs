@@ -5,14 +5,21 @@ namespace Sigurd.AvaloniaBepInExConsole.LogService;
 public class AvaloniaLogListener : ILogListener
 {
     private ILogMessageQueue _taskQueue;
+    private ManualLogSource _logger;
 
-    public AvaloniaLogListener(ILogMessageQueue taskQueue)
+    public AvaloniaLogListener(ILogMessageQueue taskQueue, ManualLogSource logger)
     {
         _taskQueue = taskQueue;
+        _logger = logger;
     }
 
     public void LogEvent(object sender, LogEventArgs eventArgs)
     {
+        if (eventArgs.Source == _logger)
+            return;
+
+        _logger.LogDebug($"Queueing message: {eventArgs}");
+
         _taskQueue.QueueAsync(eventArgs)
             .GetAwaiter()
             .GetResult();

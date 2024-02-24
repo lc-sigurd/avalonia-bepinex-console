@@ -9,7 +9,7 @@ using NetMQ.Sockets;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
-public class LogQueueProcessor(ILogMessageQueue logQueue) : BackgroundService
+public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger) : BackgroundService
 {
     private PublisherSocket? _publisherSocket;
 
@@ -34,6 +34,8 @@ public class LogQueueProcessor(ILogMessageQueue logQueue) : BackgroundService
         while (!cancellationToken.IsCancellationRequested) {
             try {
                 var logEventArgs = await logQueue.DequeueAsync(cancellationToken);
+                if (logEventArgs.Source == logger)
+                    continue;
                 PublishLogMessage(logEventArgs);
             }
             catch (OperationCanceledException) { }
@@ -46,7 +48,8 @@ public class LogQueueProcessor(ILogMessageQueue logQueue) : BackgroundService
     private void PublishLogMessage(LogEventArgs logEventArgs)
     {
         EnsureSocketAlive();
-        _publisherSocket.TrySendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
+        logger.LogDebug($"Publishing message: {logEventArgs}");
+        _publisherSocket.SendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
     }
 
     [MemberNotNullWhen(true, nameof(_publisherSocket))]
