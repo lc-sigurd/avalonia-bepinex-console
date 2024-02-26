@@ -14,4 +14,11 @@
         <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
     </ItemGroup>
 
+    <!-- Runtime dependencies -->
+    <ItemGroup>
+        <Reference Include="OdinSerializer">
+            <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
 </Project>
