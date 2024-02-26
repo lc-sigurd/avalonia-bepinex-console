@@ -17,7 +17,7 @@
     <ItemGroup>
         <PreThunderstoreGenTargetName Include="AddDependencyAssemblyCopyPaths" />
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath 
+        <ThunderstoreBuildCopyPath
             Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/bin/$(Configuration)/netstandard2.1/com.sigurd.avalonia_bepinex_console.patcher.dll"
             Destination="BepInEx/patchers/AvaloniaBepinExConsole.Patcher/"
         />
@@ -37,7 +37,7 @@
         <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
     </ItemGroup>
