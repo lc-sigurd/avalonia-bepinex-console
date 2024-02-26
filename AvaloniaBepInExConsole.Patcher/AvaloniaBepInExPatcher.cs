@@ -55,7 +55,7 @@ public static class AvaloniaBepInExPatcher
             return; // fail silently because BepInEx will throw an error anyway
 
         using var injected = AssemblyDefinition.ReadAssembly(AvaloniaConsoleServerAssemblyPath);
-        var originalStartMethod = injected.MainModule.Types.First(x => x.Name == "LogListenerBootstrap").Methods
+        var originalStartMethod = injected.MainModule.Types.First(x => x.Name == "Bootstrap").Methods
             .First(x => x.Name == "Start");
 
         var startMethod = assembly.MainModule.ImportReference(originalStartMethod);
