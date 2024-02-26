@@ -24,5 +24,8 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
         <PackageReference Include="NetMQ" Version="4.0.1.13"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
+        <Reference Include="OdinSerializer">
+            <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>
