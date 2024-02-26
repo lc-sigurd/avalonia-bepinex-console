@@ -1,6 +1,4 @@
 using System;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
@@ -59,7 +57,13 @@ public class BepInExLogListener : BackgroundService
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
-        // do something with the lifetime event
+        switch (gameLifetimeEvent.Type) {
+            case GameLifetimeEventType.Start:
+                LogMessages.Clear();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     async Task receiveLogMessageAsync(SubscriberSocket subscriber)
