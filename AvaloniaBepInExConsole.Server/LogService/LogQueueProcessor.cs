@@ -33,6 +33,7 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 
     private async Task ProcessLogQueueAsync(CancellationToken cancellationToken)
     {
+        logger.LogInfo("Entering queue processing loop");
         while (!cancellationToken.IsCancellationRequested) {
             try {
                 var logEventArgs = await logQueue.DequeueAsync(cancellationToken);
@@ -40,11 +41,14 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
                     continue;
                 PublishLogMessage(logEventArgs);
             }
-            catch (OperationCanceledException) { }
+            catch (Exception exc) when (exc is OperationCanceledException or TaskCanceledException) {
+                logger.LogInfo("Caught cancellation exception");
+            }
             catch (Exception exc) {
                 logger.LogError($"Encountered exception while trying to publish a message\n{exc}");
             }
         }
+        logger.LogInfo("Exited queue processing loop");
     }
 
     private void PublishLogMessage(LogEventArgs logEventArgs)
