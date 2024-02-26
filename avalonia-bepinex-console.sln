@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.App"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.Patcher", "AvaloniaBepInExConsole.Patcher\AvaloniaBepInExConsole.Patcher.csproj", "{7E810582-C81E-48C8-9D7D-5E08DC6D348B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaBepInExConsole.Common", "AvaloniaBepInExConsole.Common\AvaloniaBepInExConsole.Common.csproj", "{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +34,13 @@ Global
 		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.ReleaseApp|Any CPU.ActiveCfg = ReleaseApp|Any CPU
 		{7E810582-C81E-48C8-9D7D-5E08DC6D348B}.DebugApp|Any CPU.ActiveCfg = DebugApp|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.ReleaseApp|Any CPU.ActiveCfg = ReleaseApp|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.ReleaseApp|Any CPU.Build.0 = ReleaseApp|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.DebugApp|Any CPU.ActiveCfg = DebugApp|Any CPU
+		{FE20B2F3-638E-46DC-A48E-B271D8DB07DE}.DebugApp|Any CPU.Build.0 = DebugApp|Any CPU
 	EndGlobalSection
 EndGlobal
