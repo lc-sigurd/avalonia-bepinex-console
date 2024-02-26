@@ -25,7 +25,7 @@
         <PackageReference Include="NetMQ" Version="4.0.1.13"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
         <Reference Include="OdinSerializer">
-            <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
+            <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
         </Reference>
     </ItemGroup>
 
