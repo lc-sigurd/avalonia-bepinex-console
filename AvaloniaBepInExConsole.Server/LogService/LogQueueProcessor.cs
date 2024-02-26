@@ -21,14 +21,14 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
         await ProcessLogQueueAsync(stoppingToken);
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
+    public override async Task StopAsync(CancellationToken cancellationToken)
     {
+        await base.StopAsync(cancellationToken);
+
         if (SocketAlive) {
             _publisherSocket.Dispose();
             _publisherSocket = null;
         }
-
-        return base.StopAsync(cancellationToken);
     }
 
     private async Task ProcessLogQueueAsync(CancellationToken cancellationToken)
