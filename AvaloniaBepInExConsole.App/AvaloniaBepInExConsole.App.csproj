@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Common.csproj" />
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
     </ItemGroup>
 
 </Project>
