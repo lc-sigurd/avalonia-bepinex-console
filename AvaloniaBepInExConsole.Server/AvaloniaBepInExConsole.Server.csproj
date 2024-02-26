@@ -44,6 +44,7 @@
 
     <ItemGroup>
         <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Common.csproj" />
     </ItemGroup>
 
     <Target Name="AddDependencyAssemblyCopyPaths">
