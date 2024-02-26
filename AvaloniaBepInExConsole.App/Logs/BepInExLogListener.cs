@@ -1,11 +1,14 @@
 using System;
-using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using Microsoft.Extensions.Hosting;
 using NetMQ;
 using NetMQ.Sockets;
+using OdinSerializer;
+using Sigurd.AvaloniaBepInExConsole.Common;
 
 namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
@@ -25,26 +28,44 @@ public class BepInExLogListener : BackgroundService
         Console.WriteLine("Starting subscriber");
         using var subscriber = new SubscriberSocket("@tcp://localhost:38554");
 
-        subscriber.Subscribe("");
-        var newLogs = new LinkedList<LogMessage>();
+        subscriber.Subscribe("logMessage");
+        subscriber.Subscribe("gameLifetime");
 
-        while (true) {
+        while (!cancellationToken.IsCancellationRequested) {
             try {
-                var (message, more) = await subscriber.ReceiveFrameStringAsync(cancellationToken);
-                newLogs.AddLast(new LogMessage(message));
-                Console.WriteLine(message);
+                var (topic, more) = await subscriber.ReceiveFrameStringAsync(cancellationToken);
 
-                if (more && newLogs.Count < 100) continue;
-
-                LogMessages.AddRange(newLogs);
-                Console.WriteLine(LogMessages.Count);
-                newLogs.Clear();
+                switch (topic) {
+                    case "logMessage":
+                        if (!more) continue;
+                        await receiveLogMessageAsync(subscriber);
+                        break;
+                    case "gameLifetime":
+                        if (!more) continue;
+                        await receiveGameLifetimeEventAsync(subscriber);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(topic));
+                }
             }
             catch (OperationCanceledException) { }
             catch (Exception exc) {
                 Console.WriteLine(exc);
-                // todo: log
             }
         }
+    }
+
+    async Task receiveGameLifetimeEventAsync(SubscriberSocket subscriber)
+    {
+        var payload = await subscriber.ReceiveMultipartMessageAsync();
+        var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
+        // do something with the lifetime event
+    }
+
+    async Task receiveLogMessageAsync(SubscriberSocket subscriber)
+    {
+        var payload = await subscriber.ReceiveMultipartMessageAsync();
+        var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
+        LogMessages.Add(new LogMessage(logEvent.ToString()));
     }
 }

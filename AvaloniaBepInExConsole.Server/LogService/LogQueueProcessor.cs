@@ -6,6 +6,8 @@ using BepInEx.Logging;
 using Microsoft.Extensions.Hosting;
 using NetMQ;
 using NetMQ.Sockets;
+using OdinSerializer;
+using Sigurd.AvaloniaBepInExConsole.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
@@ -57,7 +59,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #if DEBUG
         logger.LogDebug($"Publishing message: {logEventArgs}");
 #endif
-        _publisherSocket.TrySendFrame(logEventArgs.ToString(), logQueue.HasQueuedLogMessages);
+        var convertedLogEvent = logEventArgs.ToAvaloniaBepInExConsoleLogEvent();
+        var serializedLogEventArgs = SerializationUtility.SerializeValue(convertedLogEvent, DataFormat.Binary);
+        _publisherSocket.SendMoreFrame("logMessage").SendFrame(serializedLogEventArgs);
     }
 
     [MemberNotNullWhen(true, nameof(_publisherSocket))]
