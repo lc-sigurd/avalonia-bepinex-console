@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Logging;
 using NetMQ;
+using Sigurd.AvaloniaBepInExConsole.Common;
 using Sigurd.AvaloniaBepInExConsole.LogService;
 using UnityEngine;
 using Logger = BepInEx.Logging.Logger;
@@ -24,6 +25,8 @@ public sealed class Manager : MonoBehaviour
         _queue = new DefaultLogMessageQueue(32);
         _processor = new LogQueueProcessor(_queue, internalLogger);
         _listener = new AvaloniaLogListener(_queue, internalLogger);
+
+        Task.Run(() => _queue.QueueAsync(new GameLifetimeEvent { Type = GameLifetimeEventType.Start }));
 
         Logger.Listeners.Add(_listener);
         _logger.LogInfo("Listener initialised");

@@ -1,4 +1,5 @@
 using BepInEx.Logging;
+using Sigurd.AvaloniaBepInExConsole.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
@@ -20,7 +21,7 @@ public class AvaloniaLogListener : ILogListener
 #if DEBUG
         _logger.LogDebug($"Queueing message: {eventArgs}");
 #endif
-        _taskQueue.QueueAsync(eventArgs)
+        _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent())
             .GetAwaiter()
             .GetResult();
     }
