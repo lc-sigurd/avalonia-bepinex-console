@@ -28,4 +28,9 @@
             <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
         </Reference>
     </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Common.csproj" />
+    </ItemGroup>
+
 </Project>
