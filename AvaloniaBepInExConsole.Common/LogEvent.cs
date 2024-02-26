@@ -3,7 +3,7 @@ using OdinSerializer;
 
 namespace Sigurd.AvaloniaBepInExConsole.Common;
 
-public record LogEvent
+public record LogEvent : IConsoleEvent
 {
     [OdinSerialize]
     public required object Data { get; init; }
