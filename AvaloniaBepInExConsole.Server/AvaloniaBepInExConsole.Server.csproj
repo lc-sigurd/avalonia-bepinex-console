@@ -21,6 +21,7 @@
             Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/bin/$(Configuration)/netstandard2.1/com.sigurd.avalonia_bepinex_console.patcher.dll"
             Destination="BepInEx/patchers/AvaloniaBepinExConsole.Patcher/"
         />
+        <ThunderstoreDependency Include="Lordfirespeed-OdinSerializer" Version="2022.11.9" Reference="false" />
     </ItemGroup>
 
     <!-- Development dependencies -->
@@ -36,6 +37,9 @@
         <PackageReference Include="NetMQ" Version="4.0.1.13" />
         <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+        <Reference Include="OdinSerializer">
+            <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
