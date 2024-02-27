@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Sigurd.AvaloniaBepInExConsole.App.ViewModels"
+        xmlns:local="clr-namespace:Sigurd.AvaloniaBepInExConsole.App.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Sigurd.AvaloniaBepInExConsole.App.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
@@ -64,7 +65,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <!-- can't bind inlines, see here for workarounds https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines -->
-                        <TextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
+                        <local:ANSIFormattedTextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
