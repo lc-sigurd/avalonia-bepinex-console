@@ -9,5 +9,5 @@ public class AnsiTextCharacters : TextCharacters
     public AnsiTextCharacters(ReadOnlyMemory<char> text, TextRunProperties textRunProperties) : base(text, textRunProperties) { }
 
     public override int Length => SourceLength;
-    public int SourceLength { get; set; }
+    public required int SourceLength { get; init; }
 }
