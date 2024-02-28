@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Logging;
 using DynamicData;
 using Microsoft.Extensions.Hosting;
 using NetMQ;
@@ -59,6 +60,7 @@ public class BepInExLogListener : BackgroundService
         var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
         switch (gameLifetimeEvent.Type) {
             case GameLifetimeEventType.Start:
+                Console.WriteLine("Received start event, clearing log");
                 LogMessages.Clear();
                 break;
             default:
@@ -70,6 +72,7 @@ public class BepInExLogListener : BackgroundService
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
+        Console.WriteLine("Received log message");
         LogMessages.Add(new LogMessage(logEvent.ToAnsiColouredString()));
     }
 }
