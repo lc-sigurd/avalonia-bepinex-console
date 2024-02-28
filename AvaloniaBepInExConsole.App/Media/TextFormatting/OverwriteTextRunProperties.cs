@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
@@ -6,34 +7,37 @@ namespace Sigurd.AvaloniaBepInExConsole.App.Media.TextFormatting;
 
 public class OverwriteTextRunProperties : TextRunProperties
 {
-    private readonly TextRunProperties _defaults;
+    public required TextRunProperties Defaults { get; init; }
 
+    public OverwriteTextRunProperties() { }
+
+    [SetsRequiredMembers]
     public OverwriteTextRunProperties(TextRunProperties defaults)
     {
-        _defaults = defaults;
+        Defaults = defaults;
     }
 
-    public override Typeface Typeface => TypefaceOverwrite ?? _defaults.Typeface;
+    public override Typeface Typeface => TypefaceOverwrite ?? Defaults.Typeface;
 
     public Typeface? TypefaceOverwrite { get; set; }
 
-    public override double FontRenderingEmSize => FontRenderingEmSizeOverwrite.GetValueOrDefault(_defaults.FontRenderingEmSize);
+    public override double FontRenderingEmSize => FontRenderingEmSizeOverwrite.GetValueOrDefault(Defaults.FontRenderingEmSize);
 
     public double? FontRenderingEmSizeOverwrite { get; set; }
 
-    public override TextDecorationCollection? TextDecorations => _defaults.TextDecorations;
+    public override TextDecorationCollection? TextDecorations => Defaults.TextDecorations;
 
-    public override IBrush? ForegroundBrush => ForegroundBrushOverwrite ?? _defaults.ForegroundBrush;
+    public override IBrush? ForegroundBrush => ForegroundBrushOverwrite ?? Defaults.ForegroundBrush;
 
     public SolidColorBrush? ForegroundBrushOverwrite { get; set; }
 
-    public override IBrush? BackgroundBrush => BackgroundBrushOverwrite ?? _defaults.BackgroundBrush;
+    public override IBrush? BackgroundBrush => BackgroundBrushOverwrite ?? Defaults.BackgroundBrush;
 
     public SolidColorBrush? BackgroundBrushOverwrite { get; set; }
 
-    public override BaselineAlignment BaselineAlignment => _defaults.BaselineAlignment;
+    public override BaselineAlignment BaselineAlignment => Defaults.BaselineAlignment;
 
-    public override CultureInfo? CultureInfo => _defaults.CultureInfo;
+    public override CultureInfo? CultureInfo => Defaults.CultureInfo;
 
     public void ResetOverwrites()
     {

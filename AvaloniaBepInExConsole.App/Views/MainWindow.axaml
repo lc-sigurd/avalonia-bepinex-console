@@ -65,7 +65,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <!-- can't bind inlines, see here for workarounds https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines -->
-                        <local:ANSIFormattedTextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
+                        <local:AnsiFormattedTextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
