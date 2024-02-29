@@ -10,7 +10,7 @@ using Sigurd.AvaloniaBepInExConsole.Common;
 
 namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
-public class BepInExLogListener : BackgroundService
+public class BepInExLogListener : BackgroundService, ILogListener
 {
     public SourceList<LogEvent> LogMessages { get; } = new();
 
