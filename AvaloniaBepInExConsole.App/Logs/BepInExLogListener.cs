@@ -59,7 +59,9 @@ public class BepInExLogListener : BackgroundService, ILogListener
         var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
         switch (gameLifetimeEvent.Type) {
             case GameLifetimeEventType.Start:
+#if DEBUGAPP
                 Console.WriteLine("Received start event, clearing log");
+#endif
                 LogMessages.Clear();
                 break;
             default:
@@ -71,7 +73,9 @@ public class BepInExLogListener : BackgroundService, ILogListener
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
+#if DEBUGAPP
         Console.WriteLine($"Received log message {logEvent}");
+#endif
         LogMessages.Add(logEvent);
     }
 }
