@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
+using Sigurd.AvaloniaBepInExConsole.App.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.App.Controls;
 
@@ -24,8 +25,8 @@ public class AutoScrollingListBox : ListBox
 
     protected virtual void OnScrollChanged(object? sender, ScrollChangedEventArgs args)
     {
-        bool userScrolledToEnd = args.OffsetDelta.Y + args.ViewportDelta.Y > args.ExtentDelta.Y - 1.0;
-        bool userScrolledUp = args.OffsetDelta.Y < 0;
+        bool userScrolledToEnd = args.IsScrolledToEnd();
+        bool userScrolledUp = args.DidScrollUp();
 
         if (userScrolledUp && !userScrolledToEnd) {
             CurrentState = AutoScrollState.None;
@@ -49,13 +50,10 @@ public class AutoScrollingListBox : ListBox
                 handler => Scroll.ScrollChanged += handler,
                 handler => Scroll.ScrollChanged -= handler)
             .Take(1)
-            .Subscribe(_ =>
-                {
-                    var isScrolledToEnd = Math.Abs(Scroll.Offset.Y - Scroll.Extent.Height + Scroll.Viewport.Height) == 0;
-                    if (isScrolledToEnd) return;
-                    ScrollToEnd();
-                }
-            );
+            .Subscribe(args => {
+                if (args.EventArgs.IsScrolledToEnd()) return;
+                ScrollToEnd();
+            });
         Scroll.ScrollToEnd();
     }
 
