@@ -18,9 +18,9 @@ public class AnsiTextRunPropertiesFactory
 
     public virtual Typeface? Typeface { get; set; }
 
-    public virtual IBrush? ForegroundBrush { get; set; }
+    public virtual SolidColorBrush? ForegroundBrush { get; set; }
 
-    public virtual IBrush? BackgroundBrush { get; set; }
+    public virtual SolidColorBrush? BackgroundBrush { get; set; }
 
     public void Reset()
     {
