@@ -36,7 +36,7 @@ jobs:
         with:
           name: thunderstore-build
           path: |
-            ./*/bin/**/dist/*.zip
+            ./*/bin/Release/*/dist/*.zip
             ./*/assets/thunderstore.toml.user
 
   build-platform-binaries:
@@ -124,7 +124,7 @@ jobs:
       - name: Upload artifacts to Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./*/bin/**/dist/*.zip
+        run: gh release upload ${{ github.event.release.tag_name }} ./*/bin/Release/*/dist/*.zip
 
   deploy-thunderstore:
     name: Deploy to Thunderstore

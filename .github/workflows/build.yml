@@ -39,7 +39,7 @@ jobs:
         with:
           name: thunderstore-build
           path: |
-            ./*/bin/**/dist/*.zip
+            ./*/bin/Release/*/dist/*.zip
             ./*/assets/thunderstore.toml.user
 
   build-platform-binaries:
