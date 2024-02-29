@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using Avalonia.Media.TextFormatting;
@@ -11,10 +12,12 @@ public struct AnsiFormattedTextSource : ITextSource
     private const char AnsiArgDelimiter = ';';
     private const char OpenBracket = '[';
     private const char GraphicsCommand = 'm';
+    private const char Newline = '\n';
 
     private static bool IsAnsiEsc(char c) => c == AnsiEsc;
     private static bool IsOpenBracket(char c) => c == OpenBracket;
     private static bool IsGraphicsCommand(char c) => c == GraphicsCommand;
+    private static bool IsNewline(char c) => c == Newline;
 
     private readonly string _text;
 
@@ -22,12 +25,14 @@ public struct AnsiFormattedTextSource : ITextSource
     private StringBuilder? _escapeBuilder;
 
     private int _currentIndex;
+    private BitArray _omittedCharacterMap;
     private ParseState _currentState;
     private readonly AnsiTextRunPropertiesFactory _propertiesFactory;
 
     public AnsiFormattedTextSource(string text, TextRunProperties defaultProperties)
     {
         _text = text;
+        _omittedCharacterMap = new BitArray(_text.Length);
         _runTextBuilder = new();
         _propertiesFactory = new AnsiTextRunPropertiesFactory(defaultProperties);
     }
@@ -37,24 +42,28 @@ public struct AnsiFormattedTextSource : ITextSource
         if (textSourceIndex > _text.Length)
             return new TextEndOfParagraph();
 
-        _currentIndex = textSourceIndex;
+        _currentIndex = OutputToSourceIndex(textSourceIndex);
         _currentState = ParseState.Default;
         _runTextBuilder.Clear();
         _escapeBuilder?.Clear();
 
         while (_currentIndex < _text.Length) {
             if (IsAnsiEsc(Current) && IsOpenBracket(Next)) {
+                if (InParseState(ParseState.InAnsiEscape)) throw new AnsiEscapeSyntaxException("Can't ANSI escape inside ANSI escape");
                 _currentState |= ParseState.InAnsiEscape;
                 _escapeBuilder ??= new StringBuilder();
+
+                _omittedCharacterMap.Set(_currentIndex, true);
+                _omittedCharacterMap.Set(_currentIndex + 1, true);
                 Advance(2);
                 continue;
             }
 
             if (InParseState(ParseState.InAnsiEscape) && char.IsAsciiLetter(Current)) {
+                _omittedCharacterMap.Set(_currentIndex, true);
+
                 if (IsGraphicsCommand(Current) && RunIsValid) {
-                    return new AnsiTextCharacters(_runTextBuilder.ToString(), _propertiesFactory.BuildProperties()) {
-                        SourceLength = _currentIndex - (_escapeBuilder!.Length + 2) - textSourceIndex,
-                    };
+                    return new TextCharacters(_runTextBuilder.ToString(), _propertiesFactory.BuildProperties());
                 }
 
                 if (IsGraphicsCommand(Current)) {
@@ -76,6 +85,7 @@ public struct AnsiFormattedTextSource : ITextSource
 
             if (InParseState(ParseState.InAnsiEscape)) {
                 _escapeBuilder!.Append(Current);
+                _omittedCharacterMap.Set(_currentIndex, true);
                 Advance();
                 continue;
             }
@@ -89,11 +99,8 @@ public struct AnsiFormattedTextSource : ITextSource
             throw new AnsiEscapeSyntaxException("Unterminated ANSI escape.");
         }
 
-        if (RunIsValid) {
-            return new AnsiTextCharacters(_runTextBuilder.ToString(), _propertiesFactory.BuildProperties()) {
-                SourceLength = _currentIndex - textSourceIndex,
-            };
-        }
+        if (RunIsValid)
+            return new TextCharacters(_runTextBuilder.ToString(), _propertiesFactory.BuildProperties());
 
         return new TextEndOfParagraph();
     }
@@ -103,6 +110,23 @@ public struct AnsiFormattedTextSource : ITextSource
     private char Next => _text[_currentIndex + 1];
     private bool InParseState(ParseState state) => (_currentState & state) == state;
     private bool RunIsValid => _runTextBuilder.Length > 0;
+
+    private int OutputToSourceIndex(int outputIndex)
+    {
+        int sourceIndex = 0;
+        int characterCount = 0;
+        while (sourceIndex < _text.Length) {
+            if (!_omittedCharacterMap[sourceIndex]) characterCount += 1;
+            if (characterCount > outputIndex) break;
+            sourceIndex++;
+        }
+
+        while (sourceIndex > 0 && _omittedCharacterMap[sourceIndex - 1]) {
+            sourceIndex--;
+        }
+
+        return sourceIndex;
+    }
 
     [Flags]
     private enum ParseState
