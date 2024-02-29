@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Specialized;
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
@@ -38,7 +39,24 @@ public class AutoScrollingListBox : ListBox
 
     protected virtual void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
-        if (CurrentState == AutoScrollState.AutoScrollingToEnd) Dispatcher.UIThread.Post(() => Scroll.ScrollToEnd());
+        if (CurrentState == AutoScrollState.AutoScrollingToEnd) Dispatcher.UIThread.Post(ScrollToEnd);
+    }
+
+    // https://github.com/AvaloniaUI/Avalonia/issues/14365#issuecomment-1914756642
+    private void ScrollToEnd()
+    {
+        Observable.FromEventPattern<EventHandler<ScrollChangedEventArgs>, ScrollChangedEventArgs>(
+                handler => Scroll.ScrollChanged += handler,
+                handler => Scroll.ScrollChanged -= handler)
+            .Take(1)
+            .Subscribe(_ =>
+                {
+                    var isScrolledToEnd = Math.Abs(Scroll.Offset.Y - Scroll.Extent.Height + Scroll.Viewport.Height) == 0;
+                    if (isScrolledToEnd) return;
+                    ScrollToEnd();
+                }
+            );
+        Scroll.ScrollToEnd();
     }
 
     /// <summary>
