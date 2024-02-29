@@ -46,6 +46,7 @@ jobs:
     name: Build ${{ matrix.pack-type }} platform binary for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         kind: [ 'linux', 'windows', 'macOS' ]
         pack-type: [ 'zip', 'tarball', 'deb' ]
