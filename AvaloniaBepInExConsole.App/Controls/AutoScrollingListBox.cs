@@ -25,7 +25,7 @@ public class AutoScrollingListBox : ListBox
 
     protected virtual void OnScrollChanged(object? sender, ScrollChangedEventArgs args)
     {
-        bool userScrolledToEnd = args.IsScrolledToEnd();
+        bool userScrolledToEnd = Scroll.IsScrolledToEnd();
         bool userScrolledUp = args.DidScrollUp();
 
         if (userScrolledUp && !userScrolledToEnd) {
@@ -51,7 +51,8 @@ public class AutoScrollingListBox : ListBox
                 handler => Scroll.ScrollChanged -= handler)
             .Take(1)
             .Subscribe(args => {
-                if (args.EventArgs.IsScrolledToEnd()) return;
+                if (args.EventArgs.DidScrollUp()) return;
+                if (Scroll.IsScrolledToEnd()) return;
                 ScrollToEnd();
             });
         Scroll.ScrollToEnd();
