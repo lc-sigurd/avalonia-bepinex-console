@@ -7,7 +7,7 @@
 
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <ThunderstoreName>Avalonia_BepInEx_Console_Server</ThunderstoreName>
-        <ThunderstoreDescription>Adds a log output window built using the Avalonia framework.</ThunderstoreDescription>
+        <ThunderstoreDescription>Sends log messages to an output window built using the Avalonia framework.</ThunderstoreDescription>
         <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
         <HasBepInPlugin>true</HasBepInPlugin>
 
