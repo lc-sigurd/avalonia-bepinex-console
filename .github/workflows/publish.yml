@@ -93,9 +93,9 @@ jobs:
           dotnet restore
           dotnet tool restore
 
-      - name: Build solution
+      - name: Build app project
         run: |
-          dotnet build -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0
+          dotnet build AvaloniaBepInExConsole.App/AvaloniaBepInExConsole.App.csproj -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
@@ -109,7 +109,7 @@ jobs:
         run: gh release upload ${{ github.event.release.tag_name }} ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
 
   upload-release-artifacts:
-    name: Upload Release Artifacts
+    name: Add Thunderstore package to GitHub release
     needs: build-thunderstore
     runs-on: ubuntu-latest
     steps:
