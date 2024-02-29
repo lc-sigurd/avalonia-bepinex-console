@@ -57,8 +57,6 @@
                 Focusable="False"
                 BorderThickness="0"
                 CornerRadius="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
                 ItemsSource="{Binding LogMessages}"
             >
                 <ListBox.ItemTemplate>
