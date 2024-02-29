@@ -6,87 +6,87 @@ namespace Sigurd.AvaloniaBepInExConsole.App.Media.TextFormatting;
 
 public static class AnsiGraphics
 {
-    public delegate void GraphicsModeApplicator(IEnumerator<int> graphicsArgumentEnumerator, OverwriteTextRunProperties properties);
+    public delegate void GraphicsModeApplicator(IEnumerator<int> graphicsArgumentEnumerator, AnsiTextRunPropertiesFactory propsFactory);
 
-    public static void ApplyGraphicsModes(IEnumerable<int> graphicsArguments, OverwriteTextRunProperties properties)
+    public static void ApplyGraphicsModes(IEnumerable<int> graphicsArguments, AnsiTextRunPropertiesFactory propsFactory)
     {
         using var graphicsArgumentEnumerator = graphicsArguments.GetEnumerator();
 
         while (graphicsArgumentEnumerator.MoveNext()) {
             if (!ModeApplicators.TryGetValue(graphicsArgumentEnumerator.Current, out var applicator)) continue;
-            applicator(graphicsArgumentEnumerator, properties);
+            applicator(graphicsArgumentEnumerator, propsFactory);
         }
     }
 
     private static GraphicsModeApplicator ForegroundApplicatorFactory(Color colorToApply)
     {
-        return (_, properties) => {
-            properties.ForegroundBrushOverwrite ??= new SolidColorBrush {
-                Opacity = properties.ForegroundBrush?.Opacity ?? 1,
+        return (_, propsFactory) => {
+            propsFactory.ForegroundBrush ??= new SolidColorBrush {
+                Opacity = propsFactory.ForegroundBrush?.Opacity ?? 1,
             };
-            properties.ForegroundBrushOverwrite.Color = colorToApply;
+            propsFactory.ForegroundBrush.Color = colorToApply;
         };
     }
 
     private static GraphicsModeApplicator BackgroundApplicatorFactory(Color colorToApply)
     {
-        return (_, properties) => {
-            properties.BackgroundBrushOverwrite ??= new SolidColorBrush {
-                Opacity = properties.BackgroundBrush?.Opacity ?? 1,
+        return (_, propsFactory) => {
+            propsFactory.BackgroundBrush ??= new SolidColorBrush {
+                Opacity = propsFactory.BackgroundBrush?.Opacity ?? 1,
             };
-            properties.BackgroundBrushOverwrite.Color = colorToApply;
+            propsFactory.BackgroundBrush.Color = colorToApply;
         };
     }
 
     public static Dictionary<int, GraphicsModeApplicator> ModeApplicators { get; } = new() {
         #region basic
-        [0] = (enumerator, properties) => {
+        [0] = (enumerator, propsFactory) => {
             // reset all
-            properties.ResetOverwrites();
+            propsFactory.Reset();
         },
-        [1] = (enumerator, properties) => {
+        [1] = (enumerator, propsFactory) => {
             // set bold weight
         },
-        [2] = (enumerator, properties) => {
+        [2] = (enumerator, propsFactory) => {
             // set faint weight
         },
-        [22] = (enumerator, properties) => {
+        [22] = (enumerator, propsFactory) => {
             // reset weight (set regular weight)
         },
-        [3]= (enumerator, properties) => {
+        [3]= (enumerator, propsFactory) => {
             // set italic
         },
-        [23] = (enumerator, properties) => {
+        [23] = (enumerator, propsFactory) => {
             // reset italic
         },
-        [4] = (enumerator, properties) => {
+        [4] = (enumerator, propsFactory) => {
             // set underline
         },
-        [24] = (enumerator, properties) => {
+        [24] = (enumerator, propsFactory) => {
             // reset underline
         },
-        [5] = (enumerator, properties) => {
+        [5] = (enumerator, propsFactory) => {
             // set 'blinking mode'
         },
-        [25] = (enumerator, properties) => {
+        [25] = (enumerator, propsFactory) => {
             // reset blinding mode
         },
-        [7] = (enumerator, properties) => {
+        [7] = (enumerator, propsFactory) => {
             // set inverse/reverse mode
         },
-        [27] = (enumerator, properties) => {
+        [27] = (enumerator, propsFactory) => {
             // reset inverse/reverse mode
         },
-        [8] = (enumerator, properties) => {
+        [8] = (enumerator, propsFactory) => {
             // set hidden/invisible mode
         },
-        [28] = (enumerator, properties) => {
+        [28] = (enumerator, propsFactory) => {
             // reset hidden/invisible mode
         },
-        [9] = (enumerator, properties) => {
+        [9] = (enumerator, propsFactory) => {
             // set strikethrough
         },
-        [29] = (enumerator, properties) => {
+        [29] = (enumerator, propsFactory) => {
             // reset strikethrough
         },
         #endregion
@@ -112,7 +112,7 @@ public static class AnsiGraphics
         [37] = ForegroundApplicatorFactory(Colors.DarkGray),
         #endregion
 
-        [38] = (enumerator, properties) => {
+        [38] = (enumerator, propsFactory) => {
             switch (GetNext()) {
                 case 2:
                     // set truecolour
@@ -127,7 +127,7 @@ public static class AnsiGraphics
 
             void SetRgb(byte r, byte g, byte b)
             {
-                ForegroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, properties);
+                ForegroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, propsFactory);
             }
 
             void SetTrueColour()
@@ -155,10 +155,10 @@ public static class AnsiGraphics
                 var colourId = GetNext();
                 switch (colourId) {
                     case <= 7:
-                        ModeApplicators[30 + colourId](enumerator, properties);
+                        ModeApplicators[30 + colourId](enumerator, propsFactory);
                         break;
                     case <= 15:
-                        ModeApplicators[82 + colourId](enumerator, properties);
+                        ModeApplicators[82 + colourId](enumerator, propsFactory);
                         break;
                     case <= 231:
                         Set3BitColourDepth(colourId - 16);
@@ -177,19 +177,19 @@ public static class AnsiGraphics
             }
         },
 
-        [39] = (_, properties) => {
-            if (properties.ForegroundBrush?.Opacity == properties.Defaults.ForegroundBrush?.Opacity) {
-                properties.ForegroundBrushOverwrite = null;
+        [39] = (_, propsFactory) => {
+            if (propsFactory.ForegroundBrush?.Opacity == propsFactory.Defaults.ForegroundBrush?.Opacity) {
+                propsFactory.ForegroundBrush = null;
                 return;
             }
 
-            if (properties.Defaults.ForegroundBrush is not SolidColorBrush defaultSolidColorBrush)
+            if (propsFactory.Defaults.ForegroundBrush is not SolidColorBrush defaultSolidColorBrush)
                 return;
 
-            properties.ForegroundBrushOverwrite ??= new SolidColorBrush {
-                Opacity = properties.ForegroundBrush?.Opacity ?? 1,
+            propsFactory.ForegroundBrush ??= new SolidColorBrush {
+                Opacity = propsFactory.ForegroundBrush?.Opacity ?? 1,
             };
-            properties.ForegroundBrushOverwrite.Color = defaultSolidColorBrush.Color;
+            propsFactory.ForegroundBrush.Color = defaultSolidColorBrush.Color;
         },
 
         #region bright colours
@@ -234,7 +234,7 @@ public static class AnsiGraphics
         [47] = BackgroundApplicatorFactory(Colors.DarkGray),
         #endregion
 
-        [48] = (enumerator, properties) => {
+        [48] = (enumerator, propsFactory) => {
             switch (GetNext()) {
                 case 2:
                     // set truecolour
@@ -249,7 +249,7 @@ public static class AnsiGraphics
 
             void SetRgb(byte r, byte g, byte b)
             {
-                BackgroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, properties);
+                BackgroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, propsFactory);
             }
 
             void SetTrueColour()
@@ -277,10 +277,10 @@ public static class AnsiGraphics
                 var colourId = GetNext();
                 switch (colourId) {
                     case <= 7:
-                        ModeApplicators[40 + colourId](enumerator, properties);
+                        ModeApplicators[40 + colourId](enumerator, propsFactory);
                         break;
                     case <= 15:
-                        ModeApplicators[92 + colourId](enumerator, properties);
+                        ModeApplicators[92 + colourId](enumerator, propsFactory);
                         break;
                     case <= 231:
                         Set3BitColourDepth(colourId - 16);
@@ -299,20 +299,20 @@ public static class AnsiGraphics
             }
         },
 
-        [49] = (enumerator, properties) => {
+        [49] = (enumerator, propsFactory) => {
             // Reset
-            if (properties.BackgroundBrush?.Opacity == properties.Defaults.BackgroundBrush?.Opacity) {
-                properties.BackgroundBrushOverwrite = null;
+            if (propsFactory.BackgroundBrush?.Opacity == propsFactory.Defaults.BackgroundBrush?.Opacity) {
+                propsFactory.BackgroundBrush = null;
                 return;
             }
 
-            if (properties.Defaults.BackgroundBrush is not SolidColorBrush defaultSolidColorBrush)
+            if (propsFactory.Defaults.BackgroundBrush is not SolidColorBrush defaultSolidColorBrush)
                 return;
 
-            properties.BackgroundBrushOverwrite ??= new SolidColorBrush {
-                Opacity = properties.BackgroundBrush?.Opacity ?? 1,
+            propsFactory.BackgroundBrush ??= new SolidColorBrush {
+                Opacity = propsFactory.BackgroundBrush?.Opacity ?? 1,
             };
-            properties.BackgroundBrushOverwrite.Color = defaultSolidColorBrush.Color;
+            propsFactory.BackgroundBrush.Color = defaultSolidColorBrush.Color;
         },
 
         #region bright colours
