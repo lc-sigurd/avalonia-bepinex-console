@@ -8,6 +8,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
         <RootNamespace>Sigurd.AvaloniaBepInExConsole.App</RootNamespace>
+        <PackageName>Avalonia BepInEx Console</PackageName>
     </PropertyGroup>
 
     <!-- Release optimisations -->
