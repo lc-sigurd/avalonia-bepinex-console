@@ -20,4 +20,8 @@ public record LogEvent : IConsoleEvent
     public string ToStringLine() => $"{this}{Environment.NewLine}";
 
     public string ToAnsiColouredString() => $"{Level.GetLevelAnsiReset()}{this}\x1b[0m";
+
+    public string Content => ToString();
+
+    public string AnsiThemedContent => ToAnsiColouredString();
 }
