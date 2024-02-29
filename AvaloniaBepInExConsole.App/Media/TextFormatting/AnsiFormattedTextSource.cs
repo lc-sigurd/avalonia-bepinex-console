@@ -87,7 +87,7 @@ public struct AnsiFormattedTextSource : ITextSource
         }
 
         if (InParseState(ParseState.InAnsiEscape)) {
-            throw new AnsiFormattedTextBlock.AnsiEscapeSyntaxException("Unterminated ANSI escape.");
+            throw new AnsiEscapeSyntaxException("Unterminated ANSI escape.");
         }
 
         if (RunIsValid) {
