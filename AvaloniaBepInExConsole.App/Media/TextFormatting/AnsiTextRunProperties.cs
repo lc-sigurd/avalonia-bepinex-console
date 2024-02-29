@@ -11,9 +11,9 @@ public class AnsiTextRunProperties : TextRunProperties
     public AnsiTextRunProperties(TextRunProperties defaults, AnsiTextRunPropertiesFactory factory)
     {
         Defaults = defaults;
-        Typeface = factory.Typeface ?? defaults.Typeface;
-        ForegroundBrush = factory.ForegroundBrush ?? Defaults.ForegroundBrush;
-        BackgroundBrush = factory.BackgroundBrush ?? defaults.BackgroundBrush;
+        Typeface = factory.TypefaceFactory?.BuildTypeface() ?? defaults.Typeface;
+        ForegroundBrush = factory.ForegroundBrush?.BuildBrush() ?? Defaults.ForegroundBrush;
+        BackgroundBrush = factory.BackgroundBrush?.BuildBrush() ?? defaults.BackgroundBrush;
     }
 
     /// <inheritdoc />

@@ -18,22 +18,34 @@ public static class AnsiGraphics
         }
     }
 
-    private static GraphicsModeApplicator ForegroundApplicatorFactory(Color colorToApply)
+    private static GraphicsModeApplicator TypefaceFontWeightApplicatorFactory(FontWeight? weightToApply)
     {
         return (_, propsFactory) => {
-            propsFactory.ForegroundBrush ??= new SolidColorBrush {
-                Opacity = propsFactory.ForegroundBrush?.Opacity ?? 1,
-            };
+            propsFactory.TypefaceFactory ??= new AnsiTypefaceFactory(propsFactory.Defaults.Typeface);
+            propsFactory.TypefaceFactory.FontWeight = weightToApply;
+        };
+    }
+
+    private static GraphicsModeApplicator TypefaceFontStyleApplicatorFactory(FontStyle? styleToApply)
+    {
+        return (_, propsFactory) => {
+            propsFactory.TypefaceFactory ??= new AnsiTypefaceFactory(propsFactory.Defaults.Typeface);
+            propsFactory.TypefaceFactory.FontStyle = styleToApply;
+        };
+    }
+
+    private static GraphicsModeApplicator ForegroundApplicatorFactory(Color? colorToApply)
+    {
+        return (_, propsFactory) => {
+            propsFactory.ForegroundBrush ??= new AnsiBrushFactory(propsFactory.Defaults.ForegroundBrush);
             propsFactory.ForegroundBrush.Color = colorToApply;
         };
     }
 
-    private static GraphicsModeApplicator BackgroundApplicatorFactory(Color colorToApply)
+    private static GraphicsModeApplicator BackgroundApplicatorFactory(Color? colorToApply)
     {
         return (_, propsFactory) => {
-            propsFactory.BackgroundBrush ??= new SolidColorBrush {
-                Opacity = propsFactory.BackgroundBrush?.Opacity ?? 1,
-            };
+            propsFactory.BackgroundBrush ??= new AnsiBrushFactory(propsFactory.Defaults.BackgroundBrush);
             propsFactory.BackgroundBrush.Color = colorToApply;
         };
     }
@@ -44,21 +56,16 @@ public static class AnsiGraphics
             // reset all
             propsFactory.Reset();
         },
-        [1] = (enumerator, propsFactory) => {
-            // set bold weight
-        },
-        [2] = (enumerator, propsFactory) => {
-            // set faint weight
-        },
-        [22] = (enumerator, propsFactory) => {
-            // reset weight (set regular weight)
-        },
-        [3]= (enumerator, propsFactory) => {
-            // set italic
-        },
-        [23] = (enumerator, propsFactory) => {
-            // reset italic
-        },
+        // set bold weight
+        [1] = TypefaceFontWeightApplicatorFactory(FontWeight.Regular),
+        // set faint weight
+        [2] = TypefaceFontWeightApplicatorFactory(FontWeight.Thin),
+        // reset weight (set regular weight)
+        [22] = TypefaceFontWeightApplicatorFactory(null),
+        // set italic
+        [3] = TypefaceFontStyleApplicatorFactory(FontStyle.Italic),
+        // reset italic
+        [23] = TypefaceFontStyleApplicatorFactory(null),
         [4] = (enumerator, propsFactory) => {
             // set underline
         },
@@ -177,20 +184,7 @@ public static class AnsiGraphics
             }
         },
 
-        [39] = (_, propsFactory) => {
-            if (propsFactory.ForegroundBrush?.Opacity == propsFactory.Defaults.ForegroundBrush?.Opacity) {
-                propsFactory.ForegroundBrush = null;
-                return;
-            }
-
-            if (propsFactory.Defaults.ForegroundBrush is not SolidColorBrush defaultSolidColorBrush)
-                return;
-
-            propsFactory.ForegroundBrush ??= new SolidColorBrush {
-                Opacity = propsFactory.ForegroundBrush?.Opacity ?? 1,
-            };
-            propsFactory.ForegroundBrush.Color = defaultSolidColorBrush.Color;
-        },
+        [39] = ForegroundApplicatorFactory(null),
 
         #region bright colours
         // Set bright black
@@ -299,21 +293,7 @@ public static class AnsiGraphics
             }
         },
 
-        [49] = (enumerator, propsFactory) => {
-            // Reset
-            if (propsFactory.BackgroundBrush?.Opacity == propsFactory.Defaults.BackgroundBrush?.Opacity) {
-                propsFactory.BackgroundBrush = null;
-                return;
-            }
-
-            if (propsFactory.Defaults.BackgroundBrush is not SolidColorBrush defaultSolidColorBrush)
-                return;
-
-            propsFactory.BackgroundBrush ??= new SolidColorBrush {
-                Opacity = propsFactory.BackgroundBrush?.Opacity ?? 1,
-            };
-            propsFactory.BackgroundBrush.Color = defaultSolidColorBrush.Color;
-        },
+        [49] = BackgroundApplicatorFactory(null),
 
         #region bright colours
         // Set bright black
