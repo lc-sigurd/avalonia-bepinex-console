@@ -36,11 +36,11 @@ public class BepInExLogListener : BackgroundService
                 switch (topic) {
                     case "logMessage":
                         if (!more) continue;
-                        await receiveLogMessageAsync(subscriber);
+                        await ReceiveLogMessageAsync(subscriber);
                         break;
                     case "gameLifetime":
                         if (!more) continue;
-                        await receiveGameLifetimeEventAsync(subscriber);
+                        await ReceiveGameLifetimeEventAsync(subscriber);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(topic));
@@ -53,7 +53,7 @@ public class BepInExLogListener : BackgroundService
         }
     }
 
-    async Task receiveGameLifetimeEventAsync(SubscriberSocket subscriber)
+    async Task ReceiveGameLifetimeEventAsync(SubscriberSocket subscriber)
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
@@ -67,7 +67,7 @@ public class BepInExLogListener : BackgroundService
         }
     }
 
-    async Task receiveLogMessageAsync(SubscriberSocket subscriber)
+    async Task ReceiveLogMessageAsync(SubscriberSocket subscriber)
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
