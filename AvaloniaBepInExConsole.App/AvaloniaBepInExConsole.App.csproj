@@ -10,20 +10,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Models\"/>
-        <AvaloniaResource Include="Assets\**"/>
+        <Folder Include="Models\" />
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6"/>
+        <PackageReference Include="Avalonia" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'DebugApp'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
-        <PackageReference Include="NetMQ" Version="4.0.1.13"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Condition="'$(Configuration)' == 'DebugApp'" Include="Avalonia.Diagnostics" Version="11.0.6" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+        <PackageReference Include="NetMQ" Version="4.0.1.13" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
         </Reference>
