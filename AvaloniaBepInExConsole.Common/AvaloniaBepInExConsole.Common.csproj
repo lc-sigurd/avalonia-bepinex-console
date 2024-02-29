@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
         <AssemblyName>com.sigurd.avalonia_bepinex_console.common</AssemblyName>
 
         <IsPackable>false</IsPackable>
