@@ -33,9 +33,7 @@
         </Grid.ColumnDefinitions>
 
         <Panel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="Toolbar">
-            <StackPanel>
-                <TextBlock Text="Toolbar" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
-            </StackPanel>
+
         </Panel>
 
         <Grid Grid.Row="1" Grid.Column="0" Name="LogListBoxContainer">
@@ -47,7 +45,7 @@
 
             <!-- Header -->
             <Panel Grid.Row="0" Grid.Column="0" Name="LogHeader">
-                <TextBlock Text="LogHeader" />
+
             </Panel>
 
             <!-- ListBox -->
@@ -97,7 +95,7 @@
         <Panel Grid.Row="1" Grid.Column="1" Name="Sidebar" />
 
         <Panel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Name="StatusBar">
-            <TextBlock Text="Footer" />
+
         </Panel>
 
     </Grid>
