@@ -58,6 +58,7 @@
                 BorderThickness="0"
                 CornerRadius="0"
                 ItemsSource="{Binding LogMessages}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
