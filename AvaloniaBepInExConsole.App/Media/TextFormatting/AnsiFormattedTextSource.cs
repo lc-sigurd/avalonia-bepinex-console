@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Text;
 using Avalonia.Media.TextFormatting;
-using Sigurd.AvaloniaBepInExConsole.App.Controls;
 
 namespace Sigurd.AvaloniaBepInExConsole.App.Media.TextFormatting;
 

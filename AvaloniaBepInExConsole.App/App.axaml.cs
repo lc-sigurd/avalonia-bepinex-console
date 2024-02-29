@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Sigurd.AvaloniaBepInExConsole.App.Logs;
 using Sigurd.AvaloniaBepInExConsole.App.ViewModels;
 using MainWindow = Sigurd.AvaloniaBepInExConsole.App.Views.MainWindow;

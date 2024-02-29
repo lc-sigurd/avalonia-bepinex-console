@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Text;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
