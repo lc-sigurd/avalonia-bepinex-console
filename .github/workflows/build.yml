@@ -51,6 +51,14 @@ jobs:
         pack-type: [ 'zip' ]
         include:
           - kind: 'linux'
+            pack-type: 'tarball'
+          - kind: 'linux'
+            pack-type: 'deb'
+
+          - kind: 'macOS'
+            pack-type: 'tarball'
+
+          - kind: 'linux'
             target: 'linux-x64'
             os: 'ubuntu-latest'
           - kind: 'windows'
@@ -59,15 +67,6 @@ jobs:
           - kind: 'macOS'
             target: 'osx-x64'
             os: 'macos-latest'
-
-          - kind: 'linux'
-            pack-type: 'tarball'
-
-          - kind: 'linux'
-            pack-type: 'deb'
-
-          - kind: 'macOS'
-            pack-type: 'tarball'
 
           - pack-type: 'zip'
             msbuild-target: 'CreateZip'
