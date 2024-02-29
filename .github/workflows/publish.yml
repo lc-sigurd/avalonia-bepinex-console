@@ -18,7 +18,7 @@ jobs:
           submodules: recursive
 
       - name: Setup .NET environment
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.100"
 
@@ -48,22 +48,18 @@ jobs:
         pack-type: ['zip']
         include:
           - kind: 'linux'
+            pack-type: 'tarball'
             target: 'linux-x64'
             os: 'ubuntu-latest'
-          - kind: 'windows'
-            target: 'win-x64'
-            os: 'windows-latest'
-          - kind: 'macOS'
-            target: 'osx-x64'
-            os: 'macos-latest'
-
-          - kind: 'linux'
-            pack-type: 'tarball'
-
           - kind: 'linux'
             pack-type: 'deb'
 
           - kind: 'macOS'
+            target: 'osx-x64'
+            os: 'macos-latest'
+          - kind: 'macOS'
+            target: 'osx-x64'
+            os: 'macos-latest'
             pack-type: 'tarball'
 
           - pack-type: 'zip'
@@ -75,6 +71,16 @@ jobs:
           - pack-type: 'tarball'
             msbuild-target: 'CreateTarball'
             artifact-extension: '.tar.gz'
+
+          - kind: 'linux'
+            target: 'linux-x64'
+            os: 'ubuntu-latest'
+          - kind: 'windows'
+            target: 'win-x64'
+            os: 'windows-latest'
+          - kind: 'macOS'
+            target: 'osx-x64'
+            os: 'macos-latest'
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -85,7 +91,7 @@ jobs:
           submodules: recursive
 
       - name: Setup .NET environment
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.100"
 
@@ -141,7 +147,7 @@ jobs:
           name: thunderstore-build
 
       - name: Setup .NET environment
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.100"
 
