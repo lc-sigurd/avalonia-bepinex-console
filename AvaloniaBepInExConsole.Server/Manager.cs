@@ -26,7 +26,9 @@ public sealed class Manager : MonoBehaviour
         _processor = new LogQueueProcessor(_queue, internalLogger);
         _listener = new AvaloniaLogListener(_queue, internalLogger);
 
-        Task.Run(() => _queue.QueueAsync(new GameLifetimeEvent { Type = GameLifetimeEventType.Start }));
+        _queue.QueueAsync(new GameLifetimeEvent { Type = GameLifetimeEventType.Start })
+            .GetAwaiter()
+            .GetResult();
 
         Logger.Listeners.Add(_listener);
         _logger.LogInfo("Listener initialised");
