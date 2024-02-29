@@ -77,7 +77,6 @@
                     <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="IsHitTestVisible" Value="False" />
-                        <Setter Property="ClipToBounds" Value="False" />
                         <Setter Property="Margin" Value="0,0" />
                         <Setter Property="Padding" Value="0" />
                     </ControlTheme>
