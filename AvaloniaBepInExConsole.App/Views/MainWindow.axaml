@@ -51,7 +51,7 @@
             </Panel>
 
             <!-- ListBox -->
-            <ListBox
+            <local:AutoScrollingListBox
                 Grid.Row="1"
                 Grid.Column="0"
                 Name="LogListBox"
@@ -60,12 +60,19 @@
                 BorderThickness="0"
                 CornerRadius="0"
                 HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
                 ItemsSource="{Binding LogMessages}"
             >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <!-- can't bind inlines, see here for workarounds https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines -->
-                        <local:AnsiFormattedTextBlock Text="{Binding Content}" FontFamily="{StaticResource JetBrainsMonoFont}" FontSize="13.5" FontWeight="UltraLight" LineSpacing="1.2" />
+                        <local:AnsiFormattedTextBlock Text="{Binding Content}"
+                                                      FontFamily="{StaticResource
+                                                      JetBrainsMonoFont}"
+                                                      FontSize="13.5"
+                                                      FontWeight="UltraLight"
+                                                      LineSpacing="1.2"
+                                                      TextWrapping="Wrap" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
@@ -84,7 +91,7 @@
                         <VirtualizingStackPanel  />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-            </ListBox>
+            </local:AutoScrollingListBox>
         </Grid>
 
         <Panel Grid.Row="1" Grid.Column="1" Name="Sidebar" />
