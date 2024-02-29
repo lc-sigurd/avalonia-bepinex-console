@@ -134,7 +134,7 @@ public static class AnsiGraphics
             propsFactory.Reset();
         },
         // set bold weight
-        [1] = TypefaceFontWeightApplicatorFactory(FontWeight.Regular),
+        [1] = TypefaceFontWeightApplicatorFactory(FontWeight.Bold),
         // set faint weight
         [2] = TypefaceFontWeightApplicatorFactory(FontWeight.Thin),
         // reset weight (set regular weight)
