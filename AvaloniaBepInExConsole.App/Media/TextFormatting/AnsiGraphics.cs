@@ -50,6 +50,83 @@ public static class AnsiGraphics
         };
     }
 
+    private static GraphicsModeApplicator TrueColorOr256ColorApplicatorFactory(
+        int darkApplicatorOffset,
+        int brightApplicatorOffset,
+        Func<Color?, GraphicsModeApplicator> colorApplicatorFactory
+    ) {
+        return (enumerator, propsFactory) => {
+            switch (GetNext()) {
+                case 2:
+                    // set truecolour
+                    SetTrueColour();
+                    break;
+                case 5:
+                    // Set 256-colour
+                    Set256Colour();
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            void SetColor(Color color)
+            {
+                colorApplicatorFactory.Invoke(color)
+                    .Invoke(enumerator, propsFactory);
+            }
+
+            Color ColorFromIntRgb(int r, int g, int b)
+            {
+                return Color.FromRgb((byte)r, (byte)g, (byte)b);
+            }
+
+            void SetTrueColour()
+            {
+                var (r, g, b) = (GetNext(), GetNext(), GetNext());
+                SetColor(ColorFromIntRgb(r, g, b));
+            }
+
+            void Set3BitColourDepth(int index)
+            {
+                var r = index / 36 * 51;
+                var g = index % 36 / 6 * 51;
+                var b = index % 6 * 51;
+                SetColor(ColorFromIntRgb(r, g, b));
+            }
+
+            void SetGrayscale(int index)
+            {
+                var component = (byte)(index * 10 + 8);
+                SetColor(Color.FromRgb(component, component, component));
+            }
+
+            void Set256Colour()
+            {
+                var colourId = GetNext();
+                switch (colourId) {
+                    case <= 7:
+                        ModeApplicators[darkApplicatorOffset + colourId](enumerator, propsFactory);
+                        break;
+                    case <= 15:
+                        ModeApplicators[brightApplicatorOffset + colourId](enumerator, propsFactory);
+                        break;
+                    case <= 231:
+                        Set3BitColourDepth(colourId - 16);
+                        break;
+                    case <= 255:
+                        SetGrayscale(colourId - 232);
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            int GetNext()
+            {
+                enumerator.MoveNext();
+                return enumerator.Current;
+            }
+        };
+    }
+
     public static Dictionary<int, GraphicsModeApplicator> ModeApplicators { get; } = new() {
         #region basic
         [0] = (enumerator, propsFactory) => {
@@ -119,71 +196,7 @@ public static class AnsiGraphics
         [37] = ForegroundApplicatorFactory(Colors.DarkGray),
         #endregion
 
-        [38] = (enumerator, propsFactory) => {
-            switch (GetNext()) {
-                case 2:
-                    // set truecolour
-                    SetTrueColour();
-                    break;
-                case 5:
-                    // Set 256-colour
-                    Set256Colour();
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            void SetRgb(byte r, byte g, byte b)
-            {
-                ForegroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, propsFactory);
-            }
-
-            void SetTrueColour()
-            {
-                var (r, g, b) = (GetNext(), GetNext(), GetNext());
-                SetRgb((byte)r, (byte)g, (byte)b);
-            }
-
-            void Set3BitColourDepth(int index)
-            {
-                var r = index / 36 * 51;
-                var g = index % 36 / 6 * 51;
-                var b = index % 6 * 51;
-                SetRgb((byte)r, (byte)g, (byte)b);
-            }
-
-            void SetGrayscale(int index)
-            {
-                var component = (byte)(index * 10 + 8);
-                SetRgb(component, component, component);
-            }
-
-            void Set256Colour()
-            {
-                var colourId = GetNext();
-                switch (colourId) {
-                    case <= 7:
-                        ModeApplicators[30 + colourId](enumerator, propsFactory);
-                        break;
-                    case <= 15:
-                        ModeApplicators[82 + colourId](enumerator, propsFactory);
-                        break;
-                    case <= 231:
-                        Set3BitColourDepth(colourId - 16);
-                        break;
-                    case <= 255:
-                        SetGrayscale(colourId - 232);
-                        break;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            int GetNext()
-            {
-                enumerator.MoveNext();
-                return enumerator.Current;
-            }
-        },
-
+        [38] = TrueColorOr256ColorApplicatorFactory(30, 82, ForegroundApplicatorFactory),
         [39] = ForegroundApplicatorFactory(null),
 
         #region bright colours
@@ -228,71 +241,7 @@ public static class AnsiGraphics
         [47] = BackgroundApplicatorFactory(Colors.DarkGray),
         #endregion
 
-        [48] = (enumerator, propsFactory) => {
-            switch (GetNext()) {
-                case 2:
-                    // set truecolour
-                    SetTrueColour();
-                    break;
-                case 5:
-                    // Set 256-colour
-                    Set256Colour();
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            void SetRgb(byte r, byte g, byte b)
-            {
-                BackgroundApplicatorFactory(Color.FromRgb(r, g, b))(enumerator, propsFactory);
-            }
-
-            void SetTrueColour()
-            {
-                var (r, g, b) = (GetNext(), GetNext(), GetNext());
-                SetRgb((byte)r, (byte)g, (byte)b);
-            }
-
-            void Set3BitColourDepth(int index)
-            {
-                var r = index / 36 * 51;
-                var g = index % 36 / 6 * 51;
-                var b = index % 6 * 51;
-                SetRgb((byte)r, (byte)g, (byte)b);
-            }
-
-            void SetGrayscale(int index)
-            {
-                var component = (byte)(index * 10 + 8);
-                SetRgb(component, component, component);
-            }
-
-            void Set256Colour()
-            {
-                var colourId = GetNext();
-                switch (colourId) {
-                    case <= 7:
-                        ModeApplicators[40 + colourId](enumerator, propsFactory);
-                        break;
-                    case <= 15:
-                        ModeApplicators[92 + colourId](enumerator, propsFactory);
-                        break;
-                    case <= 231:
-                        Set3BitColourDepth(colourId - 16);
-                        break;
-                    case <= 255:
-                        SetGrayscale(colourId - 232);
-                        break;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            int GetNext()
-            {
-                enumerator.MoveNext();
-                return enumerator.Current;
-            }
-        },
-
+        [48] = TrueColorOr256ColorApplicatorFactory(40, 92, BackgroundApplicatorFactory),
         [49] = BackgroundApplicatorFactory(null),
 
         #region bright colours
