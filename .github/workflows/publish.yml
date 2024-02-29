@@ -45,17 +45,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kind: ['linux', 'windows', 'macOS']
-        pack-type: ['zip']
+        kind: [ 'linux', 'windows', 'macOS' ]
+        pack-type: [ 'zip', 'tarball', 'deb' ]
         include:
-          - kind: 'linux'
-            pack-type: 'tarball'
-          - kind: 'linux'
-            pack-type: 'deb'
-
-          - kind: 'macOS'
-            pack-type: 'tarball'
-
           - kind: 'linux'
             target: 'linux-x64'
             os: 'ubuntu-latest'
@@ -75,6 +67,13 @@ jobs:
           - pack-type: 'tarball'
             msbuild-target: 'CreateTarball'
             artifact-extension: '.tar.gz'
+        exclude:
+          - kind: 'windows'
+            pack-type: 'tarball'
+          - kind: 'windows'
+            pack-type: 'deb'
+          - kind: 'macOS'
+            pack-type: 'deb'
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
