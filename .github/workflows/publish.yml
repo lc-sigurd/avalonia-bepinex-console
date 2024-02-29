@@ -1,0 +1,156 @@
+name: Publish
+
+on:
+  release:
+    types: [prereleased, released]
+
+jobs:
+  build-thunderstore:
+    name: Build Thunderstore Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          filter: tree:0
+          submodules: recursive
+
+      - name: Setup .NET environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.100"
+
+      - name: Restore project
+        run: |
+          dotnet restore
+          dotnet tool restore
+
+      - name: Build and pack solution
+        run: |
+          dotnet build -c Release
+
+      - name: Upload Thunderstore artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: thunderstore-build
+          path: |
+            ./*/bin/**/dist/*.zip
+            ./*/assets/thunderstore.toml.user
+
+  build-platform-binaries:
+    name: Build ${{ matrix.pack-type }} platform binary for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        kind: ['linux', 'windows', 'macOS']
+        pack-type: ['zip']
+        include:
+          - kind: 'linux'
+            target: 'linux-x64'
+            os: 'ubuntu-latest'
+          - kind: 'windows'
+            target: 'win-x64'
+            os: 'windows-latest'
+          - kind: 'macOS'
+            target: 'osx-x64'
+            os: 'macos-latest'
+
+          - kind: 'linux'
+            pack-type: 'tarball'
+
+          - kind: 'linux'
+            pack-type: 'deb'
+
+          - kind: 'macOS'
+            pack-type: 'tarball'
+
+          - pack-type: 'zip'
+            msbuild-target: 'CreateZip'
+            artifact-extension: '.zip'
+          - pack-type: 'deb'
+            msbuild-target: 'CreateDeb'
+            artifact-extension: '.deb'
+          - pack-type: 'tarball'
+            msbuild-target: 'CreateTarball'
+            artifact-extension: '.tar.gz'
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          filter: tree:0
+          submodules: recursive
+
+      - name: Setup .NET environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.100"
+
+      - name: Restore project
+        run: |
+          dotnet restore
+          dotnet tool restore
+
+      - name: Build solution
+        run: |
+          dotnet build -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}-binary-${{ matrix.pack-type }}
+          path: ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+
+      - name: Add binary artifact to GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ github.event.release.tag_name }} ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+
+  upload-release-artifacts:
+    name: Upload Release Artifacts
+    needs: build-thunderstore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - name: Download Thunderstore artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thunderstore-build
+
+      - name: Upload artifacts to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ github.event.release.tag_name }} ./*/bin/**/dist/*.zip
+
+  deploy-thunderstore:
+    name: Deploy to Thunderstore
+    needs: build-thunderstore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - name: Download Thunderstore artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thunderstore-build
+
+      - name: Setup .NET environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.100"
+
+      - name: Restore dotnet tools
+        run: |
+          dotnet tool restore
+
+      - name: Publish to Thunderstore
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
+        run: |
+          dotnet build -target:ThunderstorePublish
