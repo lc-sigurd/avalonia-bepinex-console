@@ -7,6 +7,24 @@
       "commands": [
         "tcli"
       ]
+    },
+    "dotnet-zip": {
+      "version": "0.1.220",
+      "commands": [
+        "dotnet-zip"
+      ]
+    },
+    "dotnet-deb": {
+      "version": "0.1.220",
+      "commands": [
+        "dotnet-deb"
+      ]
+    },
+    "dotnet-tarball": {
+      "version": "0.1.220",
+      "commands": [
+        "dotnet-tarball"
+      ]
     }
   }
 }
