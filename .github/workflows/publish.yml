@@ -49,28 +49,11 @@ jobs:
         include:
           - kind: 'linux'
             pack-type: 'tarball'
-            target: 'linux-x64'
-            os: 'ubuntu-latest'
           - kind: 'linux'
             pack-type: 'deb'
 
           - kind: 'macOS'
-            target: 'osx-x64'
-            os: 'macos-latest'
-          - kind: 'macOS'
-            target: 'osx-x64'
-            os: 'macos-latest'
             pack-type: 'tarball'
-
-          - pack-type: 'zip'
-            msbuild-target: 'CreateZip'
-            artifact-extension: '.zip'
-          - pack-type: 'deb'
-            msbuild-target: 'CreateDeb'
-            artifact-extension: '.deb'
-          - pack-type: 'tarball'
-            msbuild-target: 'CreateTarball'
-            artifact-extension: '.tar.gz'
 
           - kind: 'linux'
             target: 'linux-x64'
@@ -81,6 +64,16 @@ jobs:
           - kind: 'macOS'
             target: 'osx-x64'
             os: 'macos-latest'
+
+          - pack-type: 'zip'
+            msbuild-target: 'CreateZip'
+            artifact-extension: '.zip'
+          - pack-type: 'deb'
+            msbuild-target: 'CreateDeb'
+            artifact-extension: '.deb'
+          - pack-type: 'tarball'
+            msbuild-target: 'CreateTarball'
+            artifact-extension: '.tar.gz'
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
