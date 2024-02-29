@@ -29,8 +29,18 @@ public class AnsiTextRunPropertiesFactory
         BackgroundBrush = null;
     }
 
+    public bool HasOverwrites {
+        get {
+            if (Typeface is not null) return true;
+            if (ForegroundBrush is not null) return true;
+            if (BackgroundBrush is not null) return true;
+            return false;
+        }
+    }
+
     public TextRunProperties BuildProperties()
     {
+        if (!HasOverwrites) return Defaults;
         return new AnsiTextRunProperties(Defaults, this);
     }
 }
