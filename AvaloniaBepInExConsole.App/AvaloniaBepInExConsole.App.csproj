@@ -33,6 +33,10 @@
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
         </Reference>
+        <PackageReference Include="Packaging.Targets">
+            <Version>0.1.220-*</Version>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
