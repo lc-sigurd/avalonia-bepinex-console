@@ -9,6 +9,11 @@
         <RootNamespace>Sigurd.AvaloniaBepInExConsole.App</RootNamespace>
     </PropertyGroup>
 
+    <!-- Release optimisations -->
+    <PropertyGroup Condition="$(Configuration) == 'ReleaseApp'">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
     <ItemGroup>
         <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
