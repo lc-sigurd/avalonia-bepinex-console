@@ -71,7 +71,7 @@ public class BepInExLogListener : BackgroundService
     {
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
-        Console.WriteLine("Received log message");
+        Console.WriteLine($"Received log message {logEvent}");
         LogMessages.Add(new LogMessage(logEvent.ToAnsiColouredString()));
     }
 }
