@@ -12,7 +12,7 @@ namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
 public class BepInExLogListener : BackgroundService
 {
-    public SourceList<LogMessage> LogMessages { get; } = new();
+    public SourceList<LogEvent> LogMessages { get; } = new();
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -72,6 +72,6 @@ public class BepInExLogListener : BackgroundService
         var payload = await subscriber.ReceiveMultipartMessageAsync();
         var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
         Console.WriteLine($"Received log message {logEvent}");
-        LogMessages.Add(new LogMessage(logEvent.ToAnsiColouredString()));
+        LogMessages.Add(logEvent);
     }
 }
