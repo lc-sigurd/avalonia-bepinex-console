@@ -13,6 +13,7 @@
     </PropertyGroup>
 
     <Target Name="CreateCustomPackageProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
+        <!-- see https://github.com/quamotion/dotnet-packaging/blob/master/Packaging.Targets/build/Packaging.Targets.targets -->
         <PropertyGroup>
             <PackageName Condition="'$(RuntimeIdentifier)' != ''">$(PackagePrefix)-$(PackageVersion)-$(RuntimeIdentifier)</PackageName>
             <PackageName Condition="'$(PackageName)' == ''">$(PackagePrefix)-$(PackageVersion)</PackageName>
