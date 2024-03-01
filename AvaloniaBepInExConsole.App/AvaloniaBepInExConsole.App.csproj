@@ -12,22 +12,6 @@
         <Description>BepIn Console - Desktop BepInEx log viewer</Description>
     </PropertyGroup>
 
-    <Target Name="CreateCustomPackageProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
-        <!-- see https://github.com/quamotion/dotnet-packaging/blob/master/Packaging.Targets/build/Packaging.Targets.targets -->
-        <PropertyGroup>
-            <PackageName Condition="'$(RuntimeIdentifier)' != ''">$(PackagePrefix)-$(PackageVersion)-$(RuntimeIdentifier)</PackageName>
-            <PackageName Condition="'$(PackageName)' == ''">$(PackagePrefix)-$(PackageVersion)</PackageName>
-            <!-- https://github.com/dotnet/sdk/blob/73c69a6fd83bf5e646a963ecc6462e5aeb81423a/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.Shared.targets#L33 -->
-            <AppHost>bepin-console$(_NativeExecutableExtension)</AppHost>
-        </PropertyGroup>
-
-        <ItemGroup>
-            <!-- https://github.com/quamotion/dotnet-packaging/blob/3f7bd3c61a00ce2c51f4f53f34d149b0ce5f8fdd/Packaging.Targets/TaskItemExtensions.cs#L85 -->
-            <Content Include="bepin-console.desktop" LinuxPath="/usr/share/applications/bepin-console.desktop"/>
-            <Content Include="bepin-console.png" LinuxPath="/usr/share/icons/hicolor/256x256/apps/bepin-console.png"/>
-        </ItemGroup>
-    </Target>
-
     <!-- Release optimisations -->
     <PropertyGroup Condition="$(Configuration) == 'ReleaseApp'">
         <Optimize>true</Optimize>
@@ -37,6 +21,25 @@
         <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <!-- https://github.com/dotnet/sdk/blob/73c69a6fd83bf5e646a963ecc6462e5aeb81423a/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.Shared.targets#L33 -->
+        <AppHost>bepin-console$(_NativeExecutableExtension)</AppHost>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- https://github.com/quamotion/dotnet-packaging/blob/3f7bd3c61a00ce2c51f4f53f34d149b0ce5f8fdd/Packaging.Targets/TaskItemExtensions.cs#L85 -->
+        <Content Include="bepin-console.desktop" LinuxPath="/usr/share/applications/bepin-console.desktop"/>
+        <Content Include="bepin-console.png" LinuxPath="/usr/share/icons/hicolor/256x256/apps/bepin-console.png"/>
+    </ItemGroup>
+
+    <Target Name="CreateVersionDependentProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
+        <!-- see https://github.com/quamotion/dotnet-packaging/blob/master/Packaging.Targets/build/Packaging.Targets.targets -->
+        <PropertyGroup>
+            <PackageName Condition="'$(RuntimeIdentifier)' != ''">$(PackagePrefix)-$(PackageVersion)-$(RuntimeIdentifier)</PackageName>
+            <PackageName Condition="'$(PackageName)' == ''">$(PackagePrefix)-$(PackageVersion)</PackageName>
+        </PropertyGroup>
+    </Target>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.9" />
