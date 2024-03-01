@@ -23,7 +23,7 @@
         <Company>Sigurd Team</Company>
         <IsPackable>false</IsPackable>
         <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/lc-sigurd/Sigurd</RepositoryUrl>
+        <RepositoryUrl>https://github.com/lc-sigurd/avalonia-bepinex-console</RepositoryUrl>
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
