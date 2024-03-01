@@ -8,7 +8,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
         <RootNamespace>Sigurd.AvaloniaBepInExConsole.App</RootNamespace>
-        <PackageName>Avalonia BepInEx Console</PackageName>
+        <PackagePrefix>Avalonia-BepInEx-Console</PackagePrefix>
         <Description>Desktop app for viewing BepInEx logs.</Description>
     </PropertyGroup>
 
