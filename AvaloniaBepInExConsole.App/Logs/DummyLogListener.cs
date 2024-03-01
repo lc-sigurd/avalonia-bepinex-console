@@ -20,5 +20,5 @@ public class DummyLogListener : BackgroundService, ILogListener
         }
     }
 
-    private static LogEvent TestLogEvent => new LogEvent { Data = "\x1b[0;38;5;99mthe quick bro\x1b[0mwn fox\n jumps\n over \x1b[107;94mthe \nlazy dog 0123456\n789", Level = BepInExLogLevel.Info, SourceName = "Foobar" };
+    private static LogEvent TestLogEvent => new LogEvent { Content = "\x1b[0;38;5;99mthe quick bro\x1b[0mwn fox\n jumps\n over \x1b[107;94mthe \nlazy dog 0123456\n789", Level = BepInExLogLevel.Info, SourceName = "Foobar" };
 }

@@ -7,7 +7,7 @@ public static class LogEventArgsExtensions
 {
     public static LogEvent ToAvaloniaBepInExConsoleLogEvent(this LogEventArgs logEventArgs)
         => new LogEvent() {
-            Data = logEventArgs.Data,
+            Content = logEventArgs.ToString(),
             Level = logEventArgs.Level.ToAvaloniaBepInExConsoleLogLevel(),
             SourceName = logEventArgs.Source.SourceName,
         };
