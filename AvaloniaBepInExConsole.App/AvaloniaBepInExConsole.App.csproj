@@ -12,6 +12,13 @@
         <Description>Desktop app for viewing BepInEx logs.</Description>
     </PropertyGroup>
 
+    <Target Name="CreateCustomPackageProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
+        <PropertyGroup>
+            <PackageName Condition="'$(RuntimeIdentifier)' != ''">$(PackagePrefix)-$(PackageVersion)-$(RuntimeIdentifier)</PackageName>
+            <PackageName Condition="'$(PackageName)' == ''">$(PackagePrefix)-$(PackageVersion)</PackageName>
+        </PropertyGroup>
+    </Target>
+
     <!-- Release optimisations -->
     <PropertyGroup Condition="$(Configuration) == 'ReleaseApp'">
         <Optimize>true</Optimize>
