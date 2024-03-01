@@ -101,12 +101,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}-binary-${{ matrix.pack-type }}
-          path: ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+          path: ./ConsoleApp*${{ matrix.artifact-extension }}
 
       - name: Add binary artifact to GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+        run: gh release upload ${{ github.event.release.tag_name }} ./ConsoleApp*${{ matrix.artifact-extension }}
 
   upload-release-artifacts:
     name: Add Thunderstore package to GitHub release

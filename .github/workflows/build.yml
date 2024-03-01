@@ -104,4 +104,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}-binary-${{ matrix.pack-type }}
-          path: ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+          path: ./ConsoleApp*${{ matrix.artifact-extension }}
