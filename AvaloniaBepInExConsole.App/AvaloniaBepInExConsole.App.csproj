@@ -29,8 +29,8 @@
 
     <ItemGroup>
         <!-- https://github.com/quamotion/dotnet-packaging/blob/3f7bd3c61a00ce2c51f4f53f34d149b0ce5f8fdd/Packaging.Targets/TaskItemExtensions.cs#L85 -->
-        <Content Include="bepin-console.desktop" LinuxPath="/usr/share/applications/bepin-console.desktop"/>
-        <Content Include="bepin-console.png" LinuxPath="/usr/share/icons/hicolor/256x256/apps/bepin-console.png"/>
+        <Content Include="bepin-console.png" LinuxPath="/usr/share/icons/hicolor/256x256/apps/bepin-console.png" CopyToPublishDirectory="PreserveNewest" />
+        <Content Include="Platforms/linux/bepin-console.desktop" LinuxPath="/usr/share/applications/bepin-console.desktop" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
 
     <Target Name="CreateVersionDependentProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
