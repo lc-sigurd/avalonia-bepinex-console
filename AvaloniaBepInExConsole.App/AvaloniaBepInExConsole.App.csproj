@@ -24,7 +24,7 @@
 
     <PropertyGroup>
         <!-- https://github.com/dotnet/sdk/blob/73c69a6fd83bf5e646a963ecc6462e5aeb81423a/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.Shared.targets#L33 -->
-        <AppHost>bepin-console$(_NativeExecutableExtension)</AppHost>
+        <Prefix>/opt/bepin-console</Prefix>
     </PropertyGroup>
 
     <ItemGroup>
