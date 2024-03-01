@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BepIn Console
+Exec=/usr/local/bin/AvaloniaBepInExConsole.app
+Terminal=false
+Type=Application
+Icon=bepin-console
+Comment=Desktop log viewer for BepInEx, a Unity / XNA game patcher and plugin framework
+Categories=Game;

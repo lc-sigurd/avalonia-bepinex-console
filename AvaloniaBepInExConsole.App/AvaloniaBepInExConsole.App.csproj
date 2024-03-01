@@ -17,6 +17,8 @@
             <PackageName Condition="'$(RuntimeIdentifier)' != ''">$(PackagePrefix)-$(PackageVersion)-$(RuntimeIdentifier)</PackageName>
             <PackageName Condition="'$(PackageName)' == ''">$(PackagePrefix)-$(PackageVersion)</PackageName>
         </PropertyGroup>
+
+        <!-- Todo: ensure .desktop ends up at /usr/local/share/applications/ and icon ends up at /usr/local/share/icons/hicolor/256x256/apps/ -->
     </Target>
 
     <!-- Release optimisations -->
