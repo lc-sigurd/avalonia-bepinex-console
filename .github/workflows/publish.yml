@@ -95,18 +95,18 @@ jobs:
 
       - name: Build app project
         run: |
-          dotnet build AvaloniaBepInExConsole.App/AvaloniaBepInExConsole.App.csproj -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0 -o "ConsoleApp-${{ github.ref_name }}-${{ matrix.target }}"
+          dotnet build AvaloniaBepInExConsole.App/AvaloniaBepInExConsole.App.csproj -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}-binary-${{ matrix.pack-type }}
-          path: ./ConsoleApp*${{ matrix.artifact-extension }}
+          path: ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
 
       - name: Add binary artifact to GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./ConsoleApp*${{ matrix.artifact-extension }}
+        run: gh release upload ${{ github.event.release.tag_name }} ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
 
   upload-release-artifacts:
     name: Add Thunderstore package to GitHub release
