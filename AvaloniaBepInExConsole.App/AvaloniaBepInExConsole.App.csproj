@@ -9,7 +9,7 @@
         <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
         <RootNamespace>Sigurd.AvaloniaBepInExConsole.App</RootNamespace>
         <PackagePrefix>Avalonia-BepInEx-Console</PackagePrefix>
-        <Description>Desktop app for viewing BepInEx logs.</Description>
+        <Description>BepIn Console - Desktop BepInEx log viewer</Description>
     </PropertyGroup>
 
     <Target Name="CreateCustomPackageProperties" DependsOnTargets="MinVer" BeforeTargets="CreatePackageProperties">
