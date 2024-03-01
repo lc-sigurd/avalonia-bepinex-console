@@ -21,6 +21,10 @@
             <AppHost>bepin-console$(_NativeExecutableExtension)</AppHost>
         </PropertyGroup>
 
+        <ItemGroup>
+            <LinuxFolder Include="/usr/share/applications"/>
+            <LinuxFolder Include="/usr/share/icons/hicolor/256x256/apps"/>
+        </ItemGroup>
         <!-- Todo: ensure .desktop ends up at /usr/local/share/applications/ and icon ends up at /usr/local/share/icons/hicolor/256x256/apps/ -->
     </Target>
 
