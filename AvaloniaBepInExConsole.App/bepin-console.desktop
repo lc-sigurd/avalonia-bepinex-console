@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=BepIn Console
-Exec=/usr/local/bin/AvaloniaBepInExConsole.app
+Exec=/usr/local/bin/bepin-console
 Terminal=false
 Type=Application
 Icon=bepin-console
