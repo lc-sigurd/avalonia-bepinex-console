@@ -22,10 +22,10 @@
         </PropertyGroup>
 
         <ItemGroup>
-            <LinuxFolder Include="/usr/share/applications"/>
-            <LinuxFolder Include="/usr/share/icons/hicolor/256x256/apps"/>
+            <!-- https://github.com/quamotion/dotnet-packaging/blob/3f7bd3c61a00ce2c51f4f53f34d149b0ce5f8fdd/Packaging.Targets/TaskItemExtensions.cs#L85 -->
+            <Content Include="bepin-console.desktop" LinuxPath="/usr/share/applications/bepin-console.desktop"/>
+            <Content Include="bepin-console.png" LinuxPath="/usr/share/icons/hicolor/256x256/apps/bepin-console.png"/>
         </ItemGroup>
-        <!-- Todo: ensure .desktop ends up at /usr/local/share/applications/ and icon ends up at /usr/local/share/icons/hicolor/256x256/apps/ -->
     </Target>
 
     <!-- Release optimisations -->
