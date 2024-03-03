@@ -38,9 +38,13 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
         logger.LogInfo("Entering queue processing loop");
         while (!cancellationToken.IsCancellationRequested) {
             try {
+#if DEBUG
                 logger.LogDebug("Waiting for event to dequeue");
+#endif
                 var consoleEvent = await logQueue.DequeueAsync(cancellationToken);
+#if DEBUG
                 logger.LogDebug("Event dequeued");
+#endif
 
                 switch (consoleEvent) {
                     case LogEvent logEvent:
