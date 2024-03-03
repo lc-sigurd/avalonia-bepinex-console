@@ -19,8 +19,8 @@ public sealed class Manager : MonoBehaviour
 
     private void Awake()
     {
-        _logger = Logger.CreateLogSource("Avalonia Console Server");
-        var internalLogger = Logger.CreateLogSource("Avalonia Console Server/Internal");
+        _logger = Logger.CreateLogSource(ConsoleServerInfo.PRODUCT_NAME);
+        var internalLogger = Logger.CreateLogSource($"{ConsoleServerInfo.PRODUCT_NAME}/Internal");
 
         _cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
 
