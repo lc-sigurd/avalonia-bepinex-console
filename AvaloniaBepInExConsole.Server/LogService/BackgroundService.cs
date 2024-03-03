@@ -37,7 +37,7 @@ public abstract class BackgroundService : IHostedService, IDisposable
     {
         _stoppingCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _executeTask = ExecuteAsync(_stoppingCts.Token);
-        return _executeTask is { Status: UniTaskStatus.Succeeded } ? _executeTask.Value : UniTask.CompletedTask;
+        return _executeTask is not { Status: UniTaskStatus.Succeeded } ? _executeTask.Value : UniTask.CompletedTask;
     }
 
     /// <summary>
