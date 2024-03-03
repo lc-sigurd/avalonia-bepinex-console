@@ -4,7 +4,7 @@ using Sigurd.AvaloniaBepInExConsole.Common.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.Common;
 
-public record LogEvent : IConsoleEvent
+public record LogEvent : IConsoleEvent, IAnsiFormattable
 {
     [OdinSerialize]
     public required object Content { get; init; }
@@ -19,7 +19,7 @@ public record LogEvent : IConsoleEvent
 
     public string ToStringLine() => $"{this}{Environment.NewLine}";
 
-    public string ToAnsiColouredString() => $"{Level.GetLevelAnsiReset()}{this}\x1b[0m";
+    public string ToAnsiFormattedString() => $"{Level.GetLevelAnsiReset()}{this}\x1b[0m";
 
-    public string AnsiThemedContent => ToAnsiColouredString();
+    public string AnsiFormattedContent => ToAnsiFormattedString();
 }
