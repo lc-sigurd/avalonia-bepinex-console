@@ -24,6 +24,9 @@ public class AvaloniaLogListener : ILogListener
         _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent())
             .GetAwaiter()
             .GetResult();
+#if DEBUG
+        _logger.LogDebug("Message queued");
+#endif
     }
 
     public void Dispose() { }
