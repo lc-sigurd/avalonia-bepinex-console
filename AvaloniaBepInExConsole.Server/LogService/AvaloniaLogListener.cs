@@ -27,7 +27,10 @@ public class AvaloniaLogListener : ILogListener
         UniTask.RunOnThreadPool(
             () => SubmitLogEventToQueue(eventArgs, _cancellationToken),
             cancellationToken: _cancellationToken
-        ).Forget();
+        ).Forget(
+            exc => _logger.LogError($"Exception occurred during submission of a log event\n{exc}"),
+            false
+        );
     }
 
     private async UniTask SubmitLogEventToQueue(LogEventArgs eventArgs, CancellationToken cancellationToken = default)
@@ -37,14 +40,12 @@ public class AvaloniaLogListener : ILogListener
 #endif
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-        throw new SystemException();
-
         try {
             cts.CancelAfter(5000);
             await _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent(), cts.Token);
         }
-        catch (OperationCanceledException) {
-            _logger.LogError("Timed out queueing message.");
+        catch (OperationCanceledException exc) {
+            _logger.LogError($"Timed out queueing message.\n{exc}");
             return;
         }
 #if DEBUG

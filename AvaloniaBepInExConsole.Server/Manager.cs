@@ -28,13 +28,14 @@ public sealed class Manager : MonoBehaviour
         _processorService = new LogQueueProcessor(_queue, internalLogger);
         _listener = new AvaloniaLogListener(_queue, internalLogger, _cts.Token);
 
-        UniTask.RunOnThreadPool(SubmitStartGameEventToQueue, cancellationToken: _cts.Token);
+        UniTask.RunOnThreadPool(SubmitStartGameEventToQueue, cancellationToken: _cts.Token)
+            .Forget(exc => _logger.LogError($"Uncaught exception occurred during submission of the 'start game' event\n{exc}"), false);
 
         Logger.Listeners.Add(_listener);
         _logger.LogInfo("Listener initialised");
 
         UniTask.RunOnThreadPool(RunProcessor, cancellationToken: _cts.Token)
-            .Forget();
+            .Forget(exc => _logger.LogError($"Uncaught exception occurred in the processor thread\n{exc}"), false);
 
         _logger.LogInfo("Processor start requested");
 
