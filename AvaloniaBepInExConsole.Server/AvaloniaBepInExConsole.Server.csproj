@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>com.sigurd.avalonia_bepinex_console.server</AssemblyName>
-        <Product>Avalonia BepInEx Console Server</Product>
+        <Product>Avalonia Console Server</Product>
 
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <ThunderstoreName>Avalonia_BepInEx_Console_Server</ThunderstoreName>
