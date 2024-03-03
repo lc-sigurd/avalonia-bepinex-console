@@ -61,6 +61,7 @@
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ServiceModel.Primitives"/>
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ValueTuple"/>
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Channels"/>
+            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Tasks.Extensions"/>
             <IncludeInThunderstorePackageDependencyAssemblyName Include="Microsoft.Extensions.Hosting.Abstractions"/>
         </ItemGroup>
 
