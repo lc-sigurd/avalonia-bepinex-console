@@ -46,6 +46,7 @@ public sealed class Manager : MonoBehaviour
 
         async UniTask RunProcessor()
         {
+            await ChainloaderPatches.ChainloaderInitialized;
             await _processorService.StartAsync(_cts.Token);
             await _processorService.StopAsync(default);
         }
