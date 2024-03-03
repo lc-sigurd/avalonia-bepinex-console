@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Logging;
+using Cysharp.Threading.Tasks;
 using NetMQ;
 using Sigurd.AvaloniaBepInExConsole.Common;
 using Sigurd.AvaloniaBepInExConsole.LogService;
@@ -13,7 +14,7 @@ public sealed class Manager : MonoBehaviour
 {
     private ManualLogSource? _logger;
     private ILogMessageQueue? _queue;
-    private LogQueueProcessor? _processor;
+    private IHostedService? _processorService;
     private AvaloniaLogListener? _listener;
     private CancellationTokenSource? _cts;
 
@@ -22,24 +23,32 @@ public sealed class Manager : MonoBehaviour
         _logger = Logger.CreateLogSource("Avalonia Console Server");
         var internalLogger = Logger.CreateLogSource("Avalonia Console Server/Internal");
 
-        _queue = new DefaultLogMessageQueue(32);
-        _processor = new LogQueueProcessor(_queue, internalLogger);
-        _listener = new AvaloniaLogListener(_queue, internalLogger);
+        _cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
 
-        _queue.QueueAsync(new GameLifetimeEvent { Type = GameLifetimeEventType.Start })
-            .GetAwaiter()
-            .GetResult();
+        _queue = new DefaultLogMessageQueue(32);
+        _processorService = new LogQueueProcessor(_queue, internalLogger);
+        _listener = new AvaloniaLogListener(_queue, internalLogger, _cts.Token);
+
+        UniTask.RunOnThreadPool(SubmitStartGameEventToQueue, cancellationToken: _cts.Token);
 
         Logger.Listeners.Add(_listener);
         _logger.LogInfo("Listener initialised");
 
-        _cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
-        Task.Run(async () => {
-            await _processor.StartAsync(_cts.Token);
-            await _processor.ExecuteTask!;
-            await _processor.StopAsync(default);
-        });
-        _logger.LogInfo("Processor started");
+        UniTask.RunOnThreadPool(RunProcessor, cancellationToken: _cts.Token)
+            .Forget();
+
+        _logger.LogInfo("Processor start requested");
+
+        async UniTask SubmitStartGameEventToQueue()
+        {
+            await _queue.QueueAsync(new GameLifetimeEvent { Type = GameLifetimeEventType.Start }, _cts.Token);
+        }
+
+        async UniTask RunProcessor()
+        {
+            await _processorService.StartAsync(_cts.Token);
+            await _processorService.StopAsync(default);
+        }
     }
 
     private void OnApplicationQuit()

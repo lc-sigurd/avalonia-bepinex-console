@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Logging;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using NetMQ;
 using NetMQ.Sockets;
@@ -16,7 +17,7 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 {
     private PublisherSocket? _publisherSocket;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async UniTask ExecuteAsync(CancellationToken stoppingToken)
     {
         _publisherSocket = new PublisherSocket(">tcp://localhost:38554");
         // https://github.com/zeromq/netmq/issues/482
@@ -24,7 +25,7 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
         await ProcessLogQueueAsync(stoppingToken);
     }
 
-    public override async Task StopAsync(CancellationToken cancellationToken)
+    public override async UniTask StopAsync(CancellationToken cancellationToken)
     {
         await base.StopAsync(cancellationToken);
 
@@ -34,12 +35,14 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
         }
     }
 
-    private async Task ProcessLogQueueAsync(CancellationToken cancellationToken)
+    private async UniTask ProcessLogQueueAsync(CancellationToken cancellationToken)
     {
         logger.LogInfo("Entering queue processing loop");
         while (!cancellationToken.IsCancellationRequested) {
             try {
+                logger.LogDebug("Waiting for event to dequeue");
                 var consoleEvent = await logQueue.DequeueAsync(cancellationToken);
+                logger.LogDebug("Event dequeued");
 
                 switch (consoleEvent) {
                     case LogEvent logEvent:
@@ -70,6 +73,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #endif
         var serializedLogEvent = SerializationUtility.SerializeValue(logEvent, DataFormat.Binary);
         _publisherSocket.SendMoreFrame("logMessage").SendFrame(serializedLogEvent);
+#if DEBUG
+        logger.LogDebug("Published message");
+#endif
     }
 
     private void PublishGameLifetimeMessage(GameLifetimeEvent gameLifetimeEvent)
@@ -80,6 +86,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #endif
         var serializedGameLifetimeEvent = SerializationUtility.SerializeValue(gameLifetimeEvent, DataFormat.Binary);
         _publisherSocket.SendMoreFrame("gameLifetime").SendFrame(serializedGameLifetimeEvent);
+#if DEBUG
+        logger.LogDebug("Published game lifetime event");
+#endif
     }
 
     [MemberNotNullWhen(true, nameof(_publisherSocket))]

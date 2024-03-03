@@ -1,29 +1,50 @@
+using System;
+using System.Threading;
 using BepInEx.Logging;
+using Cysharp.Threading.Tasks;
 using Sigurd.AvaloniaBepInExConsole.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
 public class AvaloniaLogListener : ILogListener
 {
-    private ILogMessageQueue _taskQueue;
-    private ManualLogSource _logger;
+    private readonly ILogMessageQueue _taskQueue;
+    private readonly ManualLogSource _logger;
+    private readonly CancellationToken _cancellationToken;
 
-    public AvaloniaLogListener(ILogMessageQueue taskQueue, ManualLogSource logger)
+    public AvaloniaLogListener(ILogMessageQueue taskQueue, ManualLogSource logger, CancellationToken token)
     {
         _taskQueue = taskQueue;
         _logger = logger;
+        _cancellationToken = token;
     }
 
     public void LogEvent(object sender, LogEventArgs eventArgs)
     {
         if (eventArgs.Source == _logger)
             return;
+
+        UniTask.RunOnThreadPool(
+            () => SubmitLogEventToQueue(eventArgs, _cancellationToken),
+            cancellationToken: _cancellationToken
+        ).Forget();
+    }
+
+    private async UniTask SubmitLogEventToQueue(LogEventArgs eventArgs, CancellationToken cancellationToken = default)
+    {
 #if DEBUG
         _logger.LogDebug($"Queueing message: {eventArgs}");
 #endif
-        _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent())
-            .GetAwaiter()
-            .GetResult();
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        try {
+            cts.CancelAfter(5000);
+            await _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent(), cts.Token);
+        }
+        catch (OperationCanceledException) {
+            _logger.LogError("Timed out queueing message.");
+            return;
+        }
 #if DEBUG
         _logger.LogDebug("Message queued");
 #endif
