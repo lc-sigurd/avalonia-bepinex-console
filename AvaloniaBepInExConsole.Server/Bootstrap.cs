@@ -1,3 +1,4 @@
+using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -12,6 +13,9 @@ internal static class Bootstrap
     {
         var loop = PlayerLoop.GetCurrentPlayerLoop();
         Cysharp.Threading.Tasks.PlayerLoopHelper.Initialize(ref loop);
+
+        var harmony = new Harmony(ConsoleServerInfo.PRODUCT_GUID);
+        harmony.PatchAll(typeof(ChainloaderPatches));
 
         var managerGameObject = new GameObject("AvaloniaConsole") {
             hideFlags = HideFlags.HideAndDontSave,
