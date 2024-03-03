@@ -22,7 +22,7 @@ public sealed class Manager : MonoBehaviour
         _logger = Logger.CreateLogSource(ConsoleServerInfo.PRODUCT_NAME);
         var internalLogger = Logger.CreateLogSource($"{ConsoleServerInfo.PRODUCT_NAME}/Internal");
 
-        _cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+        _cts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
 
         _queue = new DefaultLogMessageQueue(32);
         _processorService = new LogQueueProcessor(_queue, internalLogger);
@@ -34,7 +34,7 @@ public sealed class Manager : MonoBehaviour
         Logger.Listeners.Add(_listener);
         _logger.LogInfo("Listener initialised");
 
-        UniTask.RunOnThreadPool(RunProcessor, cancellationToken: _cts.Token)
+        UniTask.RunOnThreadPool(RunProcessor)
             .Forget(exc => _logger.LogError($"Uncaught exception occurred in the processor thread\n{exc}"), false);
 
         _logger.LogInfo("Processor start requested");
@@ -51,9 +51,9 @@ public sealed class Manager : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
-        if (_cts is { IsCancellationRequested: false }) _cts.Cancel();
         NetMQConfig.Cleanup();
+        if (_cts is { IsCancellationRequested: false }) _cts.Cancel();
     }
 }

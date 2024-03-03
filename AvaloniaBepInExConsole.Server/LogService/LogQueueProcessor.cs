@@ -25,12 +25,12 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 
     public override async UniTask StopAsync(CancellationToken cancellationToken)
     {
-        await base.StopAsync(cancellationToken);
-
         if (SocketAlive) {
             _publisherSocket.Dispose();
             _publisherSocket = null;
         }
+
+        await base.StopAsync(cancellationToken);
     }
 
     private async UniTask ProcessLogQueueAsync(CancellationToken cancellationToken)
