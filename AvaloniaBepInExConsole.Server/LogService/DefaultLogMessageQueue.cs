@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
-using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
 using Sigurd.AvaloniaBepInExConsole.Common;
 using Channel = System.Threading.Channels.Channel;

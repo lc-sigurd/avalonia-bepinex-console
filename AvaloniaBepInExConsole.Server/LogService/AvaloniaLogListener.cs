@@ -37,6 +37,8 @@ public class AvaloniaLogListener : ILogListener
 #endif
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
+        throw new SystemException();
+
         try {
             cts.CancelAfter(5000);
             await _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent(), cts.Token);

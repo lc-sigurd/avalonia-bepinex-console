@@ -4,12 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using NetMQ;
 using NetMQ.Sockets;
 using OdinSerializer;
 using Sigurd.AvaloniaBepInExConsole.Common;
-using Sigurd.AvaloniaBepInExConsole.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
