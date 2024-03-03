@@ -42,7 +42,6 @@
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="NetMQ" Version="4.0.1.13" />
         <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
         </Reference>
@@ -62,7 +61,6 @@
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ValueTuple"/>
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Channels"/>
             <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Tasks.Extensions"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="Microsoft.Extensions.Hosting.Abstractions"/>
         </ItemGroup>
 
         <ItemGroup>
