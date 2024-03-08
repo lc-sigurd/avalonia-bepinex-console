@@ -27,6 +27,7 @@
         />
         <ThunderstoreDependency Include="Lordfirespeed-OdinSerializer" Version="2022.11.9" Reference="false" />
         <ThunderstoreDependency Include="Bobbie-UniTask" Version="2.5.0" Reference="false" />
+        <ThunderstoreDependency Include="dotnet_lethal_company-NetMQ" Version="4.0.100" Reference="false" />
     </ItemGroup>
 
     <!-- Development dependencies -->
@@ -51,29 +52,6 @@
         <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
         <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
     </ItemGroup>
-
-    <Target Name="AddDependencyAssemblyCopyPaths">
-        <ItemGroup>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="NetMQ"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="AsyncIO"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="NaCl"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ServiceModel.Primitives"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.ValueTuple"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Channels"/>
-            <IncludeInThunderstorePackageDependencyAssemblyName Include="System.Threading.Tasks.Extensions"/>
-        </ItemGroup>
-
-        <ItemGroup>
-            <IncludeInThunderstorePackageDependencyAssemblyPath Include="@(ReferencePathWithRefAssemblies)">
-                <CompareName>%(IncludeInThunderstorePackageDependencyAssemblyName.Identity)</CompareName>
-            </IncludeInThunderstorePackageDependencyAssemblyPath>
-            <IncludeInThunderstorePackageDependencyAssemblyPath Remove="@(IncludeInThunderstorePackageDependencyAssemblyPath)" Condition="%(FileName) != %(CompareName)"/>
-        </ItemGroup>
-
-        <ItemGroup>
-            <ThunderstoreBuildCopyPath Include="@(IncludeInThunderstorePackageDependencyAssemblyPath)" Destination="BepInEx/core/$(ProjectName)/" />
-        </ItemGroup>
-    </Target>
 
     <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
     <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
