@@ -15,7 +15,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PreThunderstoreGenTargetName Include="AddDependencyAssemblyCopyPaths" />
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
         <ThunderstoreBuildCopyPath
             Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/bin/$(Configuration)/netstandard2.1/com.sigurd.avalonia_bepinex_console.patcher.dll"
