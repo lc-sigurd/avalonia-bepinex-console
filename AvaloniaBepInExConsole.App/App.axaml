@@ -10,7 +10,14 @@
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme />
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <!-- Palette for Light theme variant -->
+                <ColorPaletteResources x:Key="Light" RegionColor="White" />
+                <!-- Palette for Dark theme variant -->
+                <ColorPaletteResources x:Key="Dark" RegionColor="#333333" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
         <StyleInclude Source="avares://AvaloniaBepInExConsole.App/Icons.axaml" />
     </Application.Styles>
 
