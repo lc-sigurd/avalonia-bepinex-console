@@ -57,6 +57,7 @@
                 Focusable="False"
                 BorderThickness="0"
                 CornerRadius="0"
+                Background="Transparent"
                 ItemsSource="{Binding LogMessages}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             >
