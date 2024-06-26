@@ -41,7 +41,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal" Name="LeftAlignedToolbar">
-                <local:LogLevelMultiSelect />
+                <local:LogLevelMultiSelect DataContext="{Binding LogLevelMultiSelect}" />
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Name="RightAlignedToolbar">

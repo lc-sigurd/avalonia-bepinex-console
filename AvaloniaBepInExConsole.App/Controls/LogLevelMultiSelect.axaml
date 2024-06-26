@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewModels="clr-namespace:Sigurd.AvaloniaBepInExConsole.App.ViewModels"
     x:Class="Sigurd.AvaloniaBepInExConsole.App.Controls.LogLevelMultiSelect"
-    x:DataType="viewModels:MainWindowViewModel"
+    x:DataType="viewModels:LogLevelMultiSelectViewModel"
 >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -64,7 +64,7 @@
 
     <StackPanel Orientation="Horizontal" Name="LogLevelSelect">
         <!-- 'Debug' log level -->
-        <ToggleButton IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton IsChecked="{Binding DebugSelected}"  IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-debug enabled"
                           Data="{StaticResource IconBug}" />
@@ -73,7 +73,7 @@
             </Panel>
         </ToggleButton>
         <!-- 'Info' log level -->
-        <ToggleButton IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton IsChecked="{Binding InfoSelected}" IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-info enabled"
                           Data="{StaticResource IconInformation}" />
@@ -82,7 +82,7 @@
             </Panel>
         </ToggleButton>
         <!-- 'Message' log level -->
-        <ToggleButton IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton IsChecked="{Binding MessageSelected}" IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-message enabled"
                           Data="{StaticResource IconChat}" />
@@ -91,7 +91,7 @@
             </Panel>
         </ToggleButton>
         <!-- 'Warning' log level -->
-        <ToggleButton  IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton  IsChecked="{Binding WarningSelected}" IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-warning enabled"
                           Data="{StaticResource IconAlert}" />
@@ -100,7 +100,7 @@
             </Panel>
         </ToggleButton>
         <!-- 'Error' log level -->
-        <ToggleButton IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton IsChecked="{Binding ErrorSelected}" IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-error enabled"
                           Data="{StaticResource IconCloseOctagon}" />
@@ -109,7 +109,7 @@
             </Panel>
         </ToggleButton>
         <!-- 'Fatal' log level -->
-        <ToggleButton IsChecked="True" IsCheckedChanged="LogLevelSelectChanged">
+        <ToggleButton IsChecked="{Binding FatalSelected}" IsCheckedChanged="LogLevelSelectChanged">
             <Panel>
                 <PathIcon Classes="log-level-fatal enabled"
                           Data="{StaticResource IconSkull}" />
