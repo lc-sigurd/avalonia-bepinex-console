@@ -17,7 +17,7 @@
     </Design.DataContext>
 
     <!-- Content -->
-    <Grid Name="RootGrid" Classes="root">
+    <Grid Name="RootGrid">
 
         <!-- Rows -->
         <Grid.RowDefinitions>
