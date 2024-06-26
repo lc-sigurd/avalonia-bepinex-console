@@ -16,8 +16,65 @@
         <viewModels:MainWindowViewModel/>
     </Design.DataContext>
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="SelectCheckedBrush">#4C4C4C</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="SelectCheckedBrush">#4C4C4C</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="#LogLevelSelect ToggleButton">
+            <Setter Property="Background" Value="Transparent"></Setter>
+
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource SelectCheckedBrush}"/>
+            </Style>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.enabled">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton:checked PathIcon.enabled">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.disabled">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton:checked PathIcon.disabled">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-debug">
+            <Setter Property="Foreground" Value="#05AD4B"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-info">
+            <Setter Property="Foreground" Value="#0578AD"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-message">
+            <Setter Property="Foreground" Value="white"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-warning">
+            <Setter Property="Foreground" Value="#FFCC00"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-error">
+            <Setter Property="Foreground" Value="#ED4337"/>
+        </Style>
+        <Style Selector="#LogLevelSelect ToggleButton PathIcon.log-level-fatal">
+            <Setter Property="Foreground" Value="#ad0532"/>
+        </Style>
+    </Window.Styles>
+
     <!-- Content -->
-    <Grid Name="RootGrid">
+    <Grid Name="RootGrid" Classes="root">
 
         <!-- Rows -->
         <Grid.RowDefinitions>
@@ -32,9 +89,87 @@
             <ColumnDefinition Width="Auto" /> <!-- Sidebar -->
         </Grid.ColumnDefinitions>
 
-        <Panel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="Toolbar">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="Toolbar">
 
-        </Panel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition> <!-- Left-aligned elements -->
+                <ColumnDefinition Width="*"></ColumnDefinition> <!-- Spacer -->
+                <ColumnDefinition Width="Auto"></ColumnDefinition> <!-- Right-aligned elements -->
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Name="LeftAlignedToolbar">
+                <StackPanel Orientation="Horizontal" Name="LogLevelSelect">
+                    <!-- 'None' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-none enabled"
+                                      Data="{StaticResource IconHelpBox}" />
+                            <PathIcon Classes="log-level-none disabled"
+                                      Data="{StaticResource IconHelpBoxOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Debug' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-debug enabled"
+                                      Data="{StaticResource IconBug}" />
+                            <PathIcon Classes="log-level-debug disabled"
+                                      Data="{StaticResource IconBugOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Info' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-info enabled"
+                                      Data="{StaticResource IconInformation}" />
+                            <PathIcon Classes="log-level-info disabled"
+                                      Data="{StaticResource IconInformationOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Message' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-message enabled"
+                                      Data="{StaticResource IconChat}" />
+                            <PathIcon Classes="log-level-message disabled"
+                                      Data="{StaticResource IconChatOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Warning' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-warning enabled"
+                                      Data="{StaticResource IconAlert}" />
+                            <PathIcon Classes="log-level-warning disabled"
+                                      Data="{StaticResource IconAlertOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Error' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-error enabled"
+                                      Data="{StaticResource IconCloseOctagon}" />
+                            <PathIcon Classes="log-level-error disabled"
+                                      Data="{StaticResource IconCloseOctagonOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                    <!-- 'Fatal' log level -->
+                    <ToggleButton IsChecked="True">
+                        <Panel>
+                            <PathIcon Classes="log-level-fatal enabled"
+                                      Data="{StaticResource IconSkull}" />
+                            <PathIcon Classes="log-level-fatal disabled"
+                                      Data="{StaticResource IconSkullOutline}" />
+                        </Panel>
+                    </ToggleButton>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Name="RightAlignedToolbar">
+
+            </StackPanel>
+
+        </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Name="LogListBoxContainer">
 
