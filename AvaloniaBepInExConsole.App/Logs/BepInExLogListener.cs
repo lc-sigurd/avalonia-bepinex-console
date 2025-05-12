@@ -1,62 +1,58 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Adaptive.Aeron;
+using Adaptive.Aeron.LogBuffer;
+using Adaptive.Agrona;
 using DynamicData;
 using Microsoft.Extensions.Hosting;
-using NetMQ;
-using NetMQ.Sockets;
 using OdinSerializer;
 using Sigurd.AvaloniaBepInExConsole.Common;
+using Sigurd.AvaloniaBepInExConsole.Common.Concurrent;
+using Sigurd.AvaloniaBepInExConsole.Common.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.App.Logs;
 
 public class BepInExLogListener : BackgroundService, ILogListener
 {
+    private const string Channel = "aeron:ipc?term-length=128k";
+    private const int StreamId = 0x73cfd0;
+
     public SourceList<LogEvent> LogMessages { get; } = new();
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var runtime = new NetMQRuntime();
-        runtime.Run(stoppingToken, ReceiveMessagesAsync(stoppingToken));
-        return Task.CompletedTask;
+        var handler = HandlerHelper.ToFragmentHandler(HandleAeronIpcMessage);
+        var fragmentedHandler = new FragmentAssembler(handler);
+
+        using var aeron = Aeron.Connect();
+        using var subscription = aeron.AddSubscription(Channel, StreamId);
+
+        await subscription.PollLoopAsync(fragmentedHandler, 1, new DelayAsyncIdleStrategy(10), stoppingToken);
     }
 
-    async Task ReceiveMessagesAsync(CancellationToken cancellationToken)
+    void HandleAeronIpcMessage(IDirectBuffer buffer, int offset, int length, Header header)
     {
-        Console.WriteLine("Starting subscriber");
-        using var subscriber = new SubscriberSocket("@tcp://localhost:38554");
+        var byteArray = buffer.ByteArray;
+        if (byteArray is null) throw new InvalidOperationException("Buffer is not backed by a byte array");
+        var stream = new MemoryStream(byteArray, offset, length, false);
+        var packet = SerializationUtility.DeserializeValue<EventPacket>(stream, DataFormat.Binary);
 
-        subscriber.Subscribe("logMessage");
-        subscriber.Subscribe("gameLifetime");
-
-        while (!cancellationToken.IsCancellationRequested) {
-            try {
-                var (topic, more) = await subscriber.ReceiveFrameStringAsync(cancellationToken);
-
-                switch (topic) {
-                    case "logMessage":
-                        if (!more) continue;
-                        await ReceiveLogMessageAsync(subscriber);
-                        break;
-                    case "gameLifetime":
-                        if (!more) continue;
-                        await ReceiveGameLifetimeEventAsync(subscriber);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(topic));
-                }
-            }
-            catch (OperationCanceledException) { }
-            catch (Exception exc) {
-                Console.WriteLine(exc);
-            }
+        switch (packet.EventType) {
+            case EventType.GameLifetime:
+                ReceiveGameLifetimeEvent((GameLifetimeEvent)packet.EventData);
+                break;
+            case EventType.Log:
+                ReceiveLogMessage((LogEvent)packet.EventData);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    async Task ReceiveGameLifetimeEventAsync(SubscriberSocket subscriber)
+    void ReceiveGameLifetimeEvent(GameLifetimeEvent gameLifetimeEvent)
     {
-        var payload = await subscriber.ReceiveMultipartMessageAsync();
-        var gameLifetimeEvent = SerializationUtility.DeserializeValue<GameLifetimeEvent>(payload.First.Buffer, DataFormat.Binary);
         switch (gameLifetimeEvent.Type) {
             case GameLifetimeEventType.Start:
 #if DEBUGAPP
@@ -69,10 +65,8 @@ public class BepInExLogListener : BackgroundService, ILogListener
         }
     }
 
-    async Task ReceiveLogMessageAsync(SubscriberSocket subscriber)
+    void ReceiveLogMessage(LogEvent logEvent)
     {
-        var payload = await subscriber.ReceiveMultipartMessageAsync();
-        var logEvent = SerializationUtility.DeserializeValue<LogEvent>(payload.First.Buffer, DataFormat.Binary);
 #if DEBUGAPP
         Console.WriteLine($"Received log message {logEvent}");
 #endif
