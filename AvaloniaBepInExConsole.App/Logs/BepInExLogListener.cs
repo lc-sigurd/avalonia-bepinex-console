@@ -36,7 +36,7 @@ public class BepInExLogListener : BackgroundService, ILogListener
     {
         var byteArray = buffer.ByteArray;
         if (byteArray is null) throw new InvalidOperationException("Buffer is not backed by a byte array");
-        var stream = new MemoryStream(byteArray, offset, length, false);
+        using var stream = new MemoryStream(byteArray, offset, length, false);
         var packet = SerializationUtility.DeserializeValue<EventPacket>(stream, DataFormat.Binary);
 
         switch (packet.EventType) {
