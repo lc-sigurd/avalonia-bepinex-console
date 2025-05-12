@@ -26,7 +26,7 @@
         />
         <ThunderstoreDependency Include="Lordfirespeed-OdinSerializer" Version="2022.11.9" Reference="false" />
         <ThunderstoreDependency Include="Bobbie-UniTask" Version="2.5.0" Reference="false" />
-        <ThunderstoreDependency Include="dotnet_lethal_company-NetMQ" Version="4.0.100" Reference="false" />
+        <ThunderstoreDependency Include="dotnet_lethal_company-Aeron_Client" Version="1.40.0" Reference="false" />
         <ThunderstoreDependency Include="dotnet_lethal_company-System_Threading_Channels" Version="8.0.0" Reference="false" />
     </ItemGroup>
 
@@ -41,7 +41,7 @@
     <Import Project="$(ProjectDir)../libs/unitask/import.props" />
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
-        <PackageReference Include="NetMQ" Version="4.0.1.13" />
+        <PackageReference Include="Aeron.Client" Version="1.40.0" />
         <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>

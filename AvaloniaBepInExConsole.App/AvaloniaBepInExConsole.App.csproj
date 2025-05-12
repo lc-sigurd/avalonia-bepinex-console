@@ -49,7 +49,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'DebugApp'" Include="Avalonia.Diagnostics" Version="11.0.9" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.11" />
-        <PackageReference Include="NetMQ" Version="4.0.1.13" />
+        <PackageReference Include="Aeron.Client" Version="1.40.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
