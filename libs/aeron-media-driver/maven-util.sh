@@ -45,16 +45,29 @@ function ResolveClasspath() {
 }
 export -f ResolveClasspath
 
+function ClasspathCacheFile() {
+  local group="${1:?missing group name argument}"
+  local artifact="${2:?missing artifact ID argument}"
+  local version="${3:?missing artifact version argument}"
+  local classpath_dir="${4:?missing classpath cache directory argument}"
+
+  echo "$classpath_dir/$group:$artifact:$version.txt"
+}
+
 function CachedResolveClasspath() {
   local group="${1:?missing group name argument}"
   local artifact="${2:?missing artifact ID argument}"
   local version="${3:?missing artifact version argument}"
-  local classpath_file="${4:?missing classpath file argument}"
+  local classpath_dir="${4:?missing classpath cache directory argument}"
+
+  local classpath_file
+  classpath_file=$(ClasspathCacheFile "$group" "$artifact" "$version" "$classpath_dir")
 
   if [ -e "$classpath_file" ]; then
     ReadNewline classpath < "$classpath_file"
   else
     Read0 classpath < <(ResolveClasspath "$group" "$artifact" "$version")
+    mkdir -p "$classpath_dir"
     PrintNewline "${classpath[@]}" > "$classpath_file"
   fi
 
@@ -80,9 +93,9 @@ function ResolveClasspathAndEnsureExists() {
   local group="${1:?missing group name argument}"
   local artifact="${2:?missing artifact ID argument}"
   local version="${3:?missing artifact version argument}"
-  local classpath_file="${4:?missing classpath file argument}"
+  local classpath_dir="${4:?missing classpath cache directory argument}"
 
-  Read0 classpath < <(CachedResolveClasspath "$group" "$artifact" "$version" "$classpath_file")
+  Read0 classpath < <(CachedResolveClasspath "$group" "$artifact" "$version" "$classpath_dir")
   if TestAllClasspathExists "${classpath[@]}"; then
     Print0 "${classpath[@]}"
     return
@@ -90,6 +103,9 @@ function ResolveClasspathAndEnsureExists() {
 
   GetArtifactFromMaven "$group" "$artifact" "$version"
   Read0 classpath < <(ResolveClasspath "$group" "$artifact" "$version")
+  local classpath_file
+  classpath_file=$(ClasspathCacheFile "$group" "$artifact" "$version" "$classpath_dir")
+  mkdir -p "$classpath_dir"
   PrintNewline "${classpath[@]}" > "$classpath_file"
 
   if ! TestAllClasspathExists "${classpath[@]}"; then

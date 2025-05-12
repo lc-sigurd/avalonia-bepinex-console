@@ -22,7 +22,7 @@ function PrepareJavaWithMediaDriverClasspath() {
       "$AERON_GROUP" \
       "$AERON_DRIVER_ARTIFACT_ID" \
       "$AERON_DRIVER_ARTIFACT_VERSION" \
-      "$script_directory/classpath.txt.local"
+      "$script_directory/.classpath.local"
   )
 
   MEDIA_DRIVER_CLASSPATH="$(PrintSep ":" "${media_driver_classpath_array[@]}")"
