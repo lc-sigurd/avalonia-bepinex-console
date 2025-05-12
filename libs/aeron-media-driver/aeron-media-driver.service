@@ -1,0 +1,10 @@
+[Unit]
+Description=Aeron Media Driver
+
+[Service]
+User=aeron
+Group=aeron
+ExecStart=/opt/aeron-driver/aeron-driver-current/bin/aeron-driver /dev/shm/aeron
+
+[Install]
+WantedBy=multi-user.target
