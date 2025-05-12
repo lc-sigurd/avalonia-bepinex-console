@@ -42,4 +42,5 @@
 
 # Explicit exceptions/ignores
 **.user
+**.local
 !**.template.*.user
