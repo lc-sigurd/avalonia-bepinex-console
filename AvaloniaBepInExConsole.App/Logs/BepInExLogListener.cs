@@ -32,11 +32,14 @@ public class BepInExLogListener : BackgroundService, ILogListener
         await subscription.PollLoopAsync(fragmentedHandler, 1, new DelayAsyncIdleStrategy(10), stoppingToken);
     }
 
-    void HandleAeronIpcMessage(IDirectBuffer buffer, int offset, int length, Header header)
+    unsafe void HandleAeronIpcMessage(IDirectBuffer buffer, int offset, int length, Header header)
     {
-        var byteArray = buffer.ByteArray;
-        if (byteArray is null) throw new InvalidOperationException("Buffer is not backed by a byte array");
-        using var stream = new MemoryStream(byteArray, offset, length, false);
+        using var stream = new UnmanagedMemoryStream(
+            (byte*)(buffer.BufferPointer + offset).ToPointer(),
+            length,
+            length,
+            FileAccess.Read
+        );
         var packet = SerializationUtility.DeserializeValue<EventPacket>(stream, DataFormat.Binary);
 
         switch (packet.EventType) {
