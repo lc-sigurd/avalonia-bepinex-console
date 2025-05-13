@@ -1,3 +1,5 @@
+using System.IO;
+using System.Text.Json;
 using System.Threading;
 using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
@@ -5,6 +7,7 @@ using Sigurd.AvaloniaBepInExConsole.Common;
 using Sigurd.AvaloniaBepInExConsole.LogService;
 using UnityEngine;
 using Logger = BepInEx.Logging.Logger;
+using static System.Reflection.Assembly;
 
 namespace Sigurd.AvaloniaBepInExConsole;
 
@@ -23,8 +26,23 @@ public sealed class Manager : MonoBehaviour
 
         _cts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
 
+        var thisAssemblyDirectory = Path.GetDirectoryName(GetExecutingAssembly().Location);
+        var configFilePath = Path.Join(thisAssemblyDirectory, $"{ConsoleServerInfo.PRODUCT_GUID}.json");
+        var configFileInfo = new FileInfo(configFilePath);
+        ServerConfig config = new();
+        if (configFileInfo.Exists) {
+            using var readConfigFileStream = File.OpenRead(configFilePath);
+            var maybeConfig = JsonSerializer.Deserialize<ServerConfig>(readConfigFileStream);
+            if (maybeConfig is not null) config = maybeConfig;
+        }
+
+        {
+            using var writeConfigFileStream = File.OpenWrite(configFilePath);
+            JsonSerializer.Serialize(writeConfigFileStream, config);
+        }
+
         _queue = new DefaultLogMessageQueue(32);
-        _processorService = new LogQueueProcessor(_queue, internalLogger);
+        _processorService = new LogQueueProcessor(_queue, internalLogger, config);
         _listener = new AvaloniaLogListener(_queue, internalLogger, _cts.Token);
 
         UniTask.RunOnThreadPool(SubmitStartGameEventToQueue, cancellationToken: _cts.Token)

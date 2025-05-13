@@ -13,12 +13,13 @@ using Sigurd.AvaloniaBepInExConsole.Common.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
-public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger) : BackgroundService
+public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger, ServerConfig config) : BackgroundService
 {
     private const string Channel = "aeron:ipc?term-length=128k";  // https://aeron.io/docs/cookbook-content/aeron-term-length-msg-size/
     private const int StreamId = 0x73cfd0;  // openssl rand -hex 3
     private UnsafeBuffer? _buffer;
     private UnmanagedMemoryStream? _stream;
+    private Aeron.Context? _aeronContext;
     private Aeron? _aeron;
     private Publication? _publication;
 
@@ -34,7 +35,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
             );
         }
 
-        _aeron = Aeron.Connect();
+        _aeronContext = new Aeron.Context();
+        if (config.AeronDirectoryName is not null) _aeronContext.AeronDirectoryName(config.AeronDirectoryName);
+        _aeron = Aeron.Connect(_aeronContext);
         _publication = _aeron.AddPublication(Channel, StreamId);
         await ProcessLogQueueAsync(stoppingToken);
     }
@@ -47,6 +50,9 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 
             _aeron!.Dispose();
             _aeron = null;
+
+            _aeronContext!.Dispose();
+            _aeronContext = null;
 
             await _stream!.DisposeAsync();
             _stream = null;
