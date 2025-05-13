@@ -41,6 +41,7 @@
         </PropertyGroup>
     </Target>
 
+    <Import Project="$(ProjectDir)../libs/odin-serializer-no-unity/import.props" />
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.11" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.11" />
@@ -50,14 +51,8 @@
         <PackageReference Condition="'$(Configuration)' == 'DebugApp'" Include="Avalonia.Diagnostics" Version="11.0.9" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.11" />
         <PackageReference Include="Aeron.Client" Version="1.40.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-        <Reference Include="OdinSerializer">
-            <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
-        </Reference>
-        <PackageReference Include="Packaging.Targets">
-            <Version>0.1.220-*</Version>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+        <PackageReference Include="Packaging.Targets" Version="0.1.232" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

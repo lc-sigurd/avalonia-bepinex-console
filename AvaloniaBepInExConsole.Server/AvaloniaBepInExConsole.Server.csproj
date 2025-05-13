@@ -5,30 +5,8 @@
         <AssemblyName>com.sigurd.avalonia_bepinex_console.server</AssemblyName>
         <Product>Avalonia Console Server</Product>
 
-        <IsThunderstorePackable>true</IsThunderstorePackable>
-        <ThunderstoreName>Avalonia_BepInEx_Console_Server</ThunderstoreName>
-        <ThunderstoreDescription>Sends log messages to an output window built using the Avalonia framework.</ThunderstoreDescription>
-        <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
-        <HasBepInPlugin>true</HasBepInPlugin>
-
         <RootNamespace>Sigurd.AvaloniaBepInExConsole</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/core/$(ProjectName)/"/>
-        <ThunderstoreBuildCopyPath
-            Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/bin/$(Configuration)/netstandard2.1/com.sigurd.avalonia_bepinex_console.patcher.dll"
-            Destination="BepInEx/patchers/AvaloniaBepInExConsole.Patcher/"
-        />
-        <ThunderstoreBuildCopyPath
-            Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/bin/$(Configuration)/netstandard2.1/com.sigurd.avalonia_bepinex_console.common.dll"
-            Destination="BepInEx/core/AvaloniaBepInExConsole.Common/"
-        />
-        <ThunderstoreDependency Include="Lordfirespeed-OdinSerializer" Version="2022.11.9" Reference="false" />
-        <ThunderstoreDependency Include="Bobbie-UniTask" Version="2.5.0" Reference="false" />
-        <ThunderstoreDependency Include="dotnet_lethal_company-Aeron_Client" Version="1.40.0" Reference="false" />
-        <ThunderstoreDependency Include="dotnet_lethal_company-System_Threading_Channels" Version="8.0.0" Reference="false" />
-    </ItemGroup>
 
     <!-- Development dependencies -->
     <ItemGroup>
@@ -39,48 +17,18 @@
 
     <!-- Runtime dependencies -->
     <Import Project="$(ProjectDir)../libs/unitask/import.props" />
+    <Import Project="$(ProjectDir)../libs/odin-serializer/import.props" />
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="Aeron.Client" Version="1.40.0" />
-        <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
-        <Reference Include="OdinSerializer">
-            <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
-        </Reference>
+        <PackageReference Include="System.Text.Json" Version="9.0.4" />
+        <PackageReference Include="System.Threading.Channels" Version="9.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
         <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
     </ItemGroup>
 
-    <!-- https://github.com/BepInEx/BepInEx.Templates/blob/9d628c67de0a84337f38f755eeb6646696ae8423/BepInEx.PluginInfoProps/BepInEx.PluginInfoProps.props -->
-    <!-- BepInEx.PluginInfoProps Copyright (c) 2021 BepInEx -->
-    <Target
-        Name="GenerateConsoleServerInfo"
-        DependsOnTargets="SetThunderstorePackageVersionEvent"
-        BeforeTargets="BeforeCompile;CoreCompile"
-    >
-        <PropertyGroup>
-            <GeneratedText><![CDATA[
-namespace $(RootNamespace)%3B
-
-#pragma warning disable 1591
-internal static class ConsoleServerInfo
-{
-    public const string PRODUCT_GUID = "$(AssemblyName)"%3B
-    public const string PRODUCT_NAME = "$(Product)"%3B
-    public const string PRODUCT_VERSION = "$(ThunderstorePackageVersion)"%3B
-}
-#pragma warning restore 1591
-
-      ]]></GeneratedText>
-            <GeneratedFilePath>$(IntermediateOutputPath)PluginLoaderInfo.cs</GeneratedFilePath>
-        </PropertyGroup>
-        <ItemGroup>
-            <Compile Include="$(GeneratedFilePath)" />
-            <FileWrites Include="$(GeneratedFilePath)" />
-        </ItemGroup>
-        <WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
-    </Target>
+    <Import Project="$(ProjectDir)GenerateProductInfo.targets" />
 
 </Project>

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ClearCopyLocalPaths>false</ClearCopyLocalPaths>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aeron.Client" Version="1.40.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="OdinSerializer">
+        <HintPath>$(ProjectDir)../libs/odin-serializer-no-unity/OdinSerializer.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

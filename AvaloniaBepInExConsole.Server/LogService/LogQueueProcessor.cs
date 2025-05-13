@@ -1,33 +1,64 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Adaptive.Aeron;
+using Adaptive.Agrona.Concurrent;
 using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
-using NetMQ;
-using NetMQ.Sockets;
 using OdinSerializer;
 using Sigurd.AvaloniaBepInExConsole.Common;
+using Sigurd.AvaloniaBepInExConsole.Common.Extensions;
 
 namespace Sigurd.AvaloniaBepInExConsole.LogService;
 
-public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger) : BackgroundService
+public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger, ServerConfig config) : BackgroundService
 {
-    private PublisherSocket? _publisherSocket;
+    private const string Channel = "aeron:ipc?term-length=128k";  // https://aeron.io/docs/cookbook-content/aeron-term-length-msg-size/
+    private const int StreamId = 0x73cfd0;  // openssl rand -hex 3
+    private UnsafeBuffer? _buffer;
+    private UnmanagedMemoryStream? _stream;
+    private Aeron.Context? _aeronContext;
+    private Aeron? _aeron;
+    private Publication? _publication;
 
     protected override async UniTask ExecuteAsync(CancellationToken stoppingToken)
     {
-        _publisherSocket = new PublisherSocket(">tcp://localhost:38554");
-        // https://github.com/zeromq/netmq/issues/482
-        await Task.Delay(500, stoppingToken);
+        unsafe {
+            _buffer = new UnsafeBuffer(new byte[16384]);
+            _stream = new UnmanagedMemoryStream(
+                (byte*)_buffer.BufferPointer.ToPointer(),
+                0,
+                _buffer.Capacity,
+                FileAccess.ReadWrite
+            );
+        }
+
+        _aeronContext = new Aeron.Context();
+        if (config.AeronDirectoryName is not null) _aeronContext.AeronDirectoryName(config.AeronDirectoryName);
+        _aeron = Aeron.Connect(_aeronContext);
+        _publication = _aeron.AddPublication(Channel, StreamId);
         await ProcessLogQueueAsync(stoppingToken);
     }
 
     public override async UniTask StopAsync(CancellationToken cancellationToken)
     {
-        if (SocketAlive) {
-            _publisherSocket.Dispose();
-            _publisherSocket = null;
+        if (PublicationAlive) {
+            _publication.Dispose();
+            _publication = null;
+
+            _aeron.Dispose();
+            _aeron = null;
+
+            _aeronContext.Dispose();
+            _aeronContext = null;
+
+            await _stream.DisposeAsync();
+            _stream = null;
+
+            _buffer.Dispose();
+            _buffer = null;
         }
 
         await base.StopAsync(cancellationToken);
@@ -48,10 +79,10 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 
                 switch (consoleEvent) {
                     case LogEvent logEvent:
-                        PublishLogMessage(logEvent);
+                        await PublishLogMessage(logEvent, cancellationToken);
                         break;
                     case GameLifetimeEvent gameLifetimeEvent:
-                        PublishGameLifetimeMessage(gameLifetimeEvent);
+                        await PublishGameLifetimeMessage(gameLifetimeEvent, cancellationToken);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(consoleEvent));
@@ -67,40 +98,55 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
         logger.LogInfo("Exited queue processing loop");
     }
 
-    private void PublishLogMessage(LogEvent logEvent)
+    private async UniTask PublishLogMessage(LogEvent logEvent, CancellationToken cancellationToken = default)
     {
         EnsureSocketAlive();
 #if DEBUG
         logger.LogDebug($"Publishing message: {logEvent}");
 #endif
-        var serializedLogEvent = SerializationUtility.SerializeValue(logEvent, DataFormat.Binary);
-        _publisherSocket.SendMoreFrame("logMessage").SendFrame(serializedLogEvent);
+        _stream.Seek(0, SeekOrigin.Begin);
+        var packet = EventPacket.Create(logEvent);
+        SerializationUtility.SerializeValue(packet, _stream, DataFormat.Binary);
+        var length = (int)_stream.Position;
+        await _publication.OfferAsync(_buffer, 0, length, cancellationToken: cancellationToken);
 #if DEBUG
         logger.LogDebug("Published message");
 #endif
     }
 
-    private void PublishGameLifetimeMessage(GameLifetimeEvent gameLifetimeEvent)
-    {
+    private async UniTask PublishGameLifetimeMessage(
+        GameLifetimeEvent gameLifetimeEvent,
+        CancellationToken cancellationToken = default
+    ) {
         EnsureSocketAlive();
 #if DEBUG
         logger.LogDebug($"Publishing game lifetime event: {gameLifetimeEvent}");
 #endif
-        var serializedGameLifetimeEvent = SerializationUtility.SerializeValue(gameLifetimeEvent, DataFormat.Binary);
-        _publisherSocket.SendMoreFrame("gameLifetime").SendFrame(serializedGameLifetimeEvent);
+        _stream.Seek(0, SeekOrigin.Begin);
+        var packet = EventPacket.Create(gameLifetimeEvent);
+        SerializationUtility.SerializeValue(packet, _stream, DataFormat.Binary);
+        var length = (int)_stream.Position;
+        await _publication.OfferAsync(_buffer, 0, length, cancellationToken: cancellationToken);
 #if DEBUG
         logger.LogDebug("Published game lifetime event");
 #endif
     }
 
-    [MemberNotNullWhen(true, nameof(_publisherSocket))]
-    private bool SocketAlive => _publisherSocket is { IsDisposed: false };
+    [MemberNotNullWhen(true, nameof(_publication))]
+    [MemberNotNullWhen(true, nameof(_aeron))]
+    [MemberNotNullWhen(true, nameof(_aeronContext))]
+    [MemberNotNullWhen(true, nameof(_buffer))]
+    [MemberNotNullWhen(true, nameof(_stream))]
+    private bool PublicationAlive => _publication is { IsClosed: false };
 
-    [MemberNotNull(nameof(_publisherSocket))]
+    [MemberNotNull(nameof(_publication))]
+    [MemberNotNull(nameof(_aeron))]
+    [MemberNotNull(nameof(_aeronContext))]
+    [MemberNotNull(nameof(_buffer))]
+    [MemberNotNull(nameof(_stream))]
     private void EnsureSocketAlive()
     {
-        if (SocketAlive) return;
-
-        throw new InvalidOperationException("Publisher socket is uninitialized or has been disposed.");
+        if (PublicationAlive) return;
+        throw new InvalidOperationException("Publication is uninitialized or has been disposed.");
     }
 }

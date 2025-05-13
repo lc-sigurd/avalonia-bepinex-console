@@ -1,0 +1,7 @@
+<Project>
+    <ItemGroup>
+        <Reference Include="BepInEx.Preloader" Publicize="true">
+            <HintPath>$(MSBuildThisFileDirectory)BepInEx.Preloader.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

@@ -8,6 +8,16 @@ public enum EventType
 
 public struct EventPacket
 {
+    public static EventPacket Create(LogEvent logEvent)
+    {
+        return new EventPacket(EventType.Log, logEvent);
+    }
+
+    public static EventPacket Create(GameLifetimeEvent gameLifetimeEvent)
+    {
+        return new EventPacket(EventType.GameLifetime, gameLifetimeEvent);
+    }
+
     private EventPacket(EventType eventType, IConsoleEvent eventData)
     {
         EventType = eventType;

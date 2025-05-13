@@ -17,11 +17,9 @@
     </ItemGroup>
 
     <!-- Runtime assembly references -->
+    <Import Project="$(ProjectDir)../libs/bepinex-preloader/import.props" />
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
-        <Reference Include="BepInEx.Preloader" Publicize="true">
-            <HintPath>$(ProjectDir)../libs/bepinex-preloader/BepInEx.Preloader.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
 </Project>

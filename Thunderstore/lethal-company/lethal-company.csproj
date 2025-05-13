@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(MSBuildThisFileDirectory)../base.props" />
+
+    <PropertyGroup>
+        <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
+        <ThunderstoreAuthToken>$(LETHAL_COMPANY_THUNDERSTORE_API_TOKEN)</ThunderstoreAuthToken>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ThunderstorePublishCommunity Include="lethal-company" CategorySlugs="misc"/>
+        <ThunderstoreDependency Include="Lordfirespeed-OdinSerializer" Version="2022.11.9" />
+        <ThunderstoreDependency Include="Bobbie-UniTask" Version="2.5.0" />
+        <ThunderstoreDependency Include="dotnet_lethal_company-Aeron_Client" Version="1.40.0" />
+        <ThunderstoreDependency Include="dotnet_lethal_company-System_Threading_Channels" Version="9.0.4" />
+        <ThunderstoreDependency Include="dotnet_lethal_company-System_Text_Json" Version="9.0.4" />
+    </ItemGroup>
+
+</Project>

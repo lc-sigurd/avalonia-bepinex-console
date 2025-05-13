@@ -4,147 +4,66 @@ on:
   release:
     types: [prereleased, released]
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  build-thunderstore:
-    name: Build Thunderstore Package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch Sources
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }}
-          fetch-depth: 0
-          filter: tree:0
-          submodules: recursive
-
-      - name: Setup .NET environment
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.100"
-
-      - name: Restore project
-        run: |
-          dotnet restore
-          dotnet tool restore
-
-      - name: Build and pack solution
-        run: |
-          dotnet build -c Release
-
-      - name: Upload Thunderstore artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: thunderstore-build
-          path: |
-            ./*/bin/Release/*/dist/*.zip
-            ./*/assets/thunderstore.toml.user
-
-  build-platform-binaries:
-    name: Build ${{ matrix.pack-type }} platform binary for ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        kind: [ 'linux', 'windows', 'macOS' ]
-        pack-type: [ 'zip', 'tarball', 'deb' ]
-        include:
-          - kind: 'linux'
-            target: 'linux-x64'
-            os: 'ubuntu-latest'
-          - kind: 'windows'
-            target: 'win-x64'
-            os: 'windows-latest'
-          - kind: 'macOS'
-            target: 'osx-x64'
-            os: 'macos-latest'
-
-          - pack-type: 'zip'
-            msbuild-target: 'CreateZip'
-            artifact-extension: '.zip'
-          - pack-type: 'deb'
-            msbuild-target: 'CreateDeb'
-            artifact-extension: '.deb'
-          - pack-type: 'tarball'
-            msbuild-target: 'CreateTarball'
-            artifact-extension: '.tar.gz'
-        exclude:
-          - kind: 'windows'
-            pack-type: 'tarball'
-          - kind: 'windows'
-            pack-type: 'deb'
-          - kind: 'macOS'
-            pack-type: 'deb'
-    steps:
-      - name: Fetch Sources
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }}
-          fetch-depth: 0
-          filter: tree:0
-          submodules: recursive
-
-      - name: Setup .NET environment
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.100"
-
-      - name: Restore project
-        run: |
-          dotnet restore
-          dotnet tool restore
-
-      - name: Build app project
-        run: |
-          dotnet build AvaloniaBepInExConsole.App/AvaloniaBepInExConsole.App.csproj -c ReleaseApp -t:${{ matrix.msbuild-target }} -r "${{ matrix.target }}" --self-contained true -f net8.0
-
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.target }}-binary-${{ matrix.pack-type }}
-          path: ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
-
-      - name: Add binary artifact to GitHub release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: gh release upload ${{ github.event.release.tag_name }} ./AvaloniaBepInExConsole.App/bin/ReleaseApp/net8.0/${{ matrix.target }}/*${{ matrix.artifact-extension }}
+  build:
+    uses: './.github/workflows/build.yml'
+    with:
+      ref: ${{ github.event.release.tag_name }}
 
   upload-release-artifacts:
-    name: Add Thunderstore package to GitHub release
-    needs: build-thunderstore
+    name: Upload Release Artifacts
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
-
-      - name: Download Thunderstore artifact
-        uses: actions/download-artifact@v4
         with:
-          name: thunderstore-build
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          filter: tree:0
+          submodules: recursive
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
 
       - name: Upload artifacts to Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: gh release upload ${{ github.event.release.tag_name }} ./*/bin/Release/*/dist/*.zip
+        run: |
+          FIND_ASSETS_COMMAND=( find . -type f '(' -false
+            -o -path "./thunderstore-build/*/bin/Release/netstandard2.1/dist/*.zip"
+            -o -path "./nupkg-build/*/bin/Release/*.nupkg"
+            -o -path "./*-binary-*/*/bin/ReleaseApp/*/*/*
+          ')' )
+          "${FIND_ASSETS_COMMAND[@]}" -print0 | xargs -0 gh release upload ${{ github.event.release.tag_name }}
 
   deploy-thunderstore:
     name: Deploy to Thunderstore
-    needs: build-thunderstore
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          filter: tree:0
+          submodules: recursive
 
       - name: Download Thunderstore artifact
         uses: actions/download-artifact@v4
         with:
           name: thunderstore-build
+          path: Thunderstore
 
       - name: Setup .NET environment
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.100"
+          dotnet-version: "9"
 
       - name: Restore dotnet tools
         run: |
@@ -152,6 +71,7 @@ jobs:
 
       - name: Publish to Thunderstore
         env:
-          TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
+          REPO_THUNDERSTORE_API_TOKEN: ${{ secrets.REPO_THUNDERSTORE_API_TOKEN }}
+          LETHAL_COMPANY_THUNDERSTORE_API_TOKEN: ${{ secrets.LETHAL_COMPANY_THUNDERSTORE_API_TOKEN }}
         run: |
           dotnet build -c Release -target:ThunderstorePublish

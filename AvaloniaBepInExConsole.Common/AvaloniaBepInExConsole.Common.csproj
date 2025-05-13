@@ -16,6 +16,7 @@
 
     <!-- Runtime dependencies -->
     <ItemGroup>
+        <PackageReference Include="Aeron.Client" Version="1.40.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
         </Reference>

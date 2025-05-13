@@ -8,9 +8,10 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="SetThunderstorePackageVersion" DependsOnTargets="MinVer">
+    <Target Name="SetVersion" AfterTargets="MinVer" DependsOnTargets="MinVer">
         <PropertyGroup>
-            <ThunderstorePackageVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ThunderstorePackageVersion>
+            <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+            <ThunderstorePackageVersion>$(PlainVersion)</ThunderstorePackageVersion>
         </PropertyGroup>
     </Target>
 </Project>
