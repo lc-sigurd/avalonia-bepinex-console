@@ -5,6 +5,6 @@
         <!-- for Linux:
         <TestProfileDir>$(HOME)/.config/r2modmanPlus-local/[GAME]/profiles/Test AvBInEConsole/</TestProfileDir>
         -->
-        <ShouldCopyToTestProfile>false</ShouldCopyToTestProfile>
+        <ShouldCopyToTestProfile Condition="'$(MSBuildProjectName)' == '[GAME]'">false</ShouldCopyToTestProfile>
     </PropertyGroup>
 </Project>
