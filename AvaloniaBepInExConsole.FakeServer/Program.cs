@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Adaptive.Aeron;
+using Adaptive.Agrona;
 using Adaptive.Agrona.Concurrent;
 using OdinSerializer;
 using Sigurd.AvaloniaBepInExConsole.Common;
@@ -18,13 +19,18 @@ var myLogEvent = new LogEvent {
     Level = BepInExLogLevel.Info,
     SourceName = "fake-server-source",
 };
-var length = WriteLogEvent(myLogEvent, myBuffer.ByteArray, 0);
+var length = WriteLogEvent(myLogEvent, myBuffer, 0);
 await publisher.OfferAsync(myBuffer, 0, length);
 Console.WriteLine("Sent message");
 
-int WriteLogEvent(LogEvent logEvent, byte[] buffer, int offset)
+unsafe int WriteLogEvent(LogEvent logEvent, IDirectBuffer buffer, int offset)
 {
-    using var stream = new MemoryStream(buffer, offset, buffer.Length, true);
+    using var stream = new UnmanagedMemoryStream(
+        (byte*)(buffer.BufferPointer + offset).ToPointer(),
+        offset,
+        buffer.Capacity,
+        FileAccess.ReadWrite
+    );
     var packet = EventPacket.Create(logEvent);
     SerializationUtility.SerializeValue(packet, stream, DataFormat.Binary);
     return (int)stream.Position;
