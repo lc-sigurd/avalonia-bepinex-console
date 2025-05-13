@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TestProfileDir>$(AppData)/r2modmanPlus-local/[GAME]/profiles/Test AvBInEConsole/</TestProfileDir>
         <!-- for Linux:
-        <TestProfileDir>$(HOME)/.config/r2modmanPlus-local/[GAME]/profiles/Test AvBInEConsole</TestProfileDir>
+        <TestProfileDir>$(HOME)/.config/r2modmanPlus-local/[GAME]/profiles/Test AvBInEConsole/</TestProfileDir>
         -->
         <ShouldCopyToTestProfile>false</ShouldCopyToTestProfile>
     </PropertyGroup>
