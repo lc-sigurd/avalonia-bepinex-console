@@ -37,7 +37,7 @@ jobs:
           FIND_ASSETS_COMMAND=( find . -type f '(' -false
             -o -path "./thunderstore-build/*/bin/Release/netstandard2.1/dist/*.zip"
             -o -path "./nupkg-build/*/bin/Release/*.nupkg"
-            -o -path "./*-binary-*/*/bin/ReleaseApp/*/*/*
+            -o -path "./*-binary-*/*/bin/ReleaseApp/*/*/*"
           ')' )
           "${FIND_ASSETS_COMMAND[@]}" -print0 | xargs -0 gh release upload ${{ github.event.release.tag_name }}
 
