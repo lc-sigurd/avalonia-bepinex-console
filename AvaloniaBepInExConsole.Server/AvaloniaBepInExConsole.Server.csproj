@@ -42,6 +42,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="Aeron.Client" Version="1.40.0" />
+        <PackageReference Include="System.Text.Json" Version="9.0.4" />
         <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
         <Reference Include="OdinSerializer">
             <HintPath>$(ProjectDir)../libs/odin-serializer/OdinSerializer.dll</HintPath>
