@@ -20,9 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
-        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
-        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Server/AvaloniaBepInExConsole.Server.csproj" />
+        <ProjectReference Include="$(MSBuildThisFileDirectory)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
+        <ProjectReference Include="$(MSBuildThisFileDirectory)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
+        <ProjectReference Include="$(MSBuildThisFileDirectory)../AvaloniaBepInExConsole.Server/AvaloniaBepInExConsole.Server.csproj" />
     </ItemGroup>
 
     <Target Name="AddAssemblyCopyPaths">
