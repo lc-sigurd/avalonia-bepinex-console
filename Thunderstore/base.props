@@ -1,0 +1,64 @@
+<Project>
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <ThunderstoreNamespace>UNSET</ThunderstoreNamespace>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+        <ThunderstoreName>Avalonia_BepInEx_Console_Server</ThunderstoreName>
+        <ThunderstoreDescription>Sends log messages to an output window built using the Avalonia framework.</ThunderstoreDescription>
+        <ThunderstoreIconPath>$(MSBuildThisFileDirectory)assets/icons/icon.png</ThunderstoreIconPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildThisFileDirectory)../CHANGELOG.md" Destination="/"/>
+        <ThunderstoreBuildCopyPath Include="$(MSBuildThisFileDirectory)../LICENSE" Destination="/"/>
+        <ThunderstoreDependency Include="BepInEx-BepInExPack" Version="5.4.2100" Reference="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PreThunderstoreGenTargetName Include="AddDependencyAssemblyCopyPaths" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Patcher/AvaloniaBepInExConsole.Patcher.csproj" />
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Common/AvaloniaBepInExConsole.Common.csproj" />
+        <ProjectReference Include="$(ProjectDir)../AvaloniaBepInExConsole.Server/AvaloniaBepInExConsole.Server.csproj" />
+    </ItemGroup>
+
+    <Target Name="AddAssemblyCopyPaths">
+        <ItemGroup>
+            <IncludeProjectReferencedAssemblyInThunderstorePackage
+                Include="com.sigurd.avalonia_bepinex_console.server"
+                Destination="BepInEx/core/AvaloniaBepInExConsole/"
+            />
+            <IncludeProjectReferencedAssemblyInThunderstorePackage
+                Include="com.sigurd.avalonia_bepinex_console.common"
+                Destination="BepInEx/core/AvaloniaBepInExConsole/"
+            />
+            <IncludeProjectReferencedAssemblyInThunderstorePackage
+                Include="com.sigurd.avalonia_bepinex_console.patcher"
+                Destination="BepInEx/patchers/AvaloniaBepInExConsole/"
+            />
+        </ItemGroup>
+
+        <!-- ProjectReference assemblies -->
+        <JoinItems
+            Left="@(ReferencePath)"
+            LeftKey="FileName"
+            LeftMetadata="*"
+            Right="@(IncludeProjectReferencedAssemblyInThunderstorePackage)"
+            RightMetadata="Destination"
+            RightKey="Identity"
+            ItemSpecToUse="Left"
+        >
+            <Output TaskParameter="JoinResult" ItemName="IncludeAssemblyPathInThunderstorePackage" />
+        </JoinItems>
+
+        <Message Importance="high" Text="Resolved: @(IncludeAssemblyPathInThunderstorePackage->'&quot;%(Identity)&quot;', ';&#10;')"/>
+
+        <ItemGroup>
+            <ThunderstoreBuildCopyPath Include="@(IncludeAssemblyPathInThunderstorePackage)" Destination="%(Destination)" />
+        </ItemGroup>
+    </Target>
+
+</Project>
