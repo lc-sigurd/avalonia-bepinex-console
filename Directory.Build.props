@@ -40,7 +40,7 @@
         <HasBepInPlugin>false</HasBepInPlugin>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
-        <ThunderstoreReadmePath>$(MSBuildProjectDirectory)/../README.md</ThunderstoreReadmePath>
+        <ThunderstoreReadmePath>$(MSBuildThisFileDirectory)README.md</ThunderstoreReadmePath>
     </PropertyGroup>
 
     <!-- .NET Framework (.NET 4) reference assemblies  -->
