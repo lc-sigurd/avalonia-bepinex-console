@@ -37,6 +37,7 @@
     <!-- Thunderstore metadata -->
     <PropertyGroup>
         <IsThunderstorePackable>false</IsThunderstorePackable>
+        <HasBepInPlugin>false</HasBepInPlugin>
         <ThunderstoreNamespace>Sigurd</ThunderstoreNamespace>
         <ThunderstoreWebsiteUrl>$(RepositoryUrl)</ThunderstoreWebsiteUrl>
         <ThunderstoreReadmePath>$(MSBuildProjectDirectory)/../README.md</ThunderstoreReadmePath>
@@ -65,7 +66,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <SetThunderstorePackageVersionTargetName Include="SetThunderstorePackageVersion" />
+        <SetThunderstorePackageVersionTargetName Include="SetVersion" />
     </ItemGroup>
 
     <!-- Release optimisations -->
