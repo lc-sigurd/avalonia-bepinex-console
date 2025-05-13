@@ -72,6 +72,6 @@ jobs:
       - name: Publish to Thunderstore
         env:
           REPO_THUNDERSTORE_API_TOKEN: ${{ secrets.REPO_THUNDERSTORE_API_TOKEN }}
-          LETHAL_COMPANY_THUNDERSTORE_API_TOKEN: ${{ secrets.LETHAL_COMPANY_THUNDERSTORE_API_TOKEN }}
+          LETHAL_COMPANY_THUNDERSTORE_API_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
         run: |
           dotnet build -c Release -target:ThunderstorePublish
