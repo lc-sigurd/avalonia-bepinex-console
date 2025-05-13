@@ -15,6 +15,9 @@ public record LogEvent : IConsoleEvent, IAnsiFormattable
     [OdinSerialize]
     public required string SourceName { get; init; }
 
+    [OdinSerialize]
+    public required long Order { get; init; }
+
     public override string ToString() => $"{Content}";
 
     public string ToStringLine() => $"{this}{Environment.NewLine}";

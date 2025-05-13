@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Adaptive.Agrona.Concurrent;
 using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
 using Sigurd.AvaloniaBepInExConsole.Extensions;
@@ -11,6 +12,7 @@ public class AvaloniaLogListener : ILogListener
     private readonly ILogMessageQueue _taskQueue;
     private readonly ManualLogSource _logger;
     private readonly CancellationToken _cancellationToken;
+    private readonly AtomicLong _counter = new();
 
     public AvaloniaLogListener(ILogMessageQueue taskQueue, ManualLogSource logger, CancellationToken token)
     {
@@ -25,7 +27,7 @@ public class AvaloniaLogListener : ILogListener
             return;
 
         UniTask.RunOnThreadPool(
-            () => SubmitLogEventToQueue(eventArgs, _cancellationToken),
+            () => SubmitLogEventToQueue(eventArgs, _counter.IncrementAndGet(), _cancellationToken),
             cancellationToken: _cancellationToken
         ).Forget(
             exc => _logger.LogError($"Exception occurred during submission of a log event\n{exc}"),
@@ -33,7 +35,7 @@ public class AvaloniaLogListener : ILogListener
         );
     }
 
-    private async UniTask SubmitLogEventToQueue(LogEventArgs eventArgs, CancellationToken cancellationToken = default)
+    private async UniTask SubmitLogEventToQueue(LogEventArgs eventArgs, long order, CancellationToken cancellationToken = default)
     {
 #if DEBUG
         _logger.LogDebug($"Queueing message: {eventArgs}");
@@ -42,7 +44,7 @@ public class AvaloniaLogListener : ILogListener
 
         try {
             cts.CancelAfter(5000);
-            await _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent(), cts.Token);
+            await _taskQueue.QueueAsync(eventArgs.ToAvaloniaBepInExConsoleLogEvent(order), cts.Token);
         }
         catch (OperationCanceledException exc) {
             _logger.LogError($"Timed out queueing message.\n{exc}");

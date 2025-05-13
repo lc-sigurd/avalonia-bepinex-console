@@ -18,6 +18,7 @@ var myLogEvent = new LogEvent {
     Content = "foo bar baz; hello, world!",
     Level = BepInExLogLevel.Info,
     SourceName = "fake-server-source",
+    Order = 0,
 };
 var length = WriteLogEvent(myLogEvent, myBuffer, 0);
 await publisher.OfferAsync(myBuffer, 0, length);
