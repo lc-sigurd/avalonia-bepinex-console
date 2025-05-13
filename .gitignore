@@ -40,6 +40,11 @@
 /AvaloniaBepInExConsole*/[Bb]in
 /AvaloniaBepInExConsole*/[Oo]bj
 
+### Thunderstore Build Projects
+!/Thunderstore
+/Thunderstore/*/[Bb]in
+/Thunderstore/*/[Oo]bj
+
 # Explicit exceptions/ignores
 **.user
 **.local
