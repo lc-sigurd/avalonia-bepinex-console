@@ -1,7 +1,6 @@
 using System.Threading;
 using BepInEx.Logging;
 using Cysharp.Threading.Tasks;
-using NetMQ;
 using Sigurd.AvaloniaBepInExConsole.Common;
 using Sigurd.AvaloniaBepInExConsole.LogService;
 using UnityEngine;
@@ -53,7 +52,6 @@ public sealed class Manager : MonoBehaviour
 
     private void OnDestroy()
     {
-        NetMQConfig.Cleanup();
         if (_cts is { IsCancellationRequested: false }) _cts.Cancel();
     }
 }
