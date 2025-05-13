@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PreThunderstoreGenTargetName Include="AddDependencyAssemblyCopyPaths" />
+        <PreThunderstoreGenTargetName Include="AddAssemblyCopyPaths" />
     </ItemGroup>
 
     <ItemGroup>
