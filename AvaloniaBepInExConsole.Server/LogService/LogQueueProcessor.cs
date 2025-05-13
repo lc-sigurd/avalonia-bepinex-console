@@ -16,7 +16,7 @@ namespace Sigurd.AvaloniaBepInExConsole.LogService;
 public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger) : BackgroundService
 {
     private const string Channel = "aeron:ipc?term-length=128k";  // https://aeron.io/docs/cookbook-content/aeron-term-length-msg-size/
-    private const int StreamId = 0x633c20;  // openssl rand -hex 3
+    private const int StreamId = 0x73cfd0;  // openssl rand -hex 3
     private UnsafeBuffer? _buffer;
     private UnmanagedMemoryStream? _stream;
     private Aeron? _aeron;
