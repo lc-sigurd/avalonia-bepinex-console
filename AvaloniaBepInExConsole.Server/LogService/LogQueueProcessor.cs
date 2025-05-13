@@ -48,16 +48,16 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
             _publication.Dispose();
             _publication = null;
 
-            _aeron!.Dispose();
+            _aeron.Dispose();
             _aeron = null;
 
-            _aeronContext!.Dispose();
+            _aeronContext.Dispose();
             _aeronContext = null;
 
-            await _stream!.DisposeAsync();
+            await _stream.DisposeAsync();
             _stream = null;
 
-            _buffer!.Dispose();
+            _buffer.Dispose();
             _buffer = null;
         }
 
@@ -104,11 +104,11 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #if DEBUG
         logger.LogDebug($"Publishing message: {logEvent}");
 #endif
-        _stream!.Seek(0, SeekOrigin.Begin);
+        _stream.Seek(0, SeekOrigin.Begin);
         var packet = EventPacket.Create(logEvent);
         SerializationUtility.SerializeValue(packet, _stream, DataFormat.Binary);
         var length = (int)_stream.Position;
-        await _publication.OfferAsync(_buffer!, 0, length, cancellationToken: cancellationToken);
+        await _publication.OfferAsync(_buffer, 0, length, cancellationToken: cancellationToken);
 #if DEBUG
         logger.LogDebug("Published message");
 #endif
@@ -122,20 +122,28 @@ public class LogQueueProcessor(ILogMessageQueue logQueue, ManualLogSource logger
 #if DEBUG
         logger.LogDebug($"Publishing game lifetime event: {gameLifetimeEvent}");
 #endif
-        _stream!.Seek(0, SeekOrigin.Begin);
+        _stream.Seek(0, SeekOrigin.Begin);
         var packet = EventPacket.Create(gameLifetimeEvent);
         SerializationUtility.SerializeValue(packet, _stream, DataFormat.Binary);
         var length = (int)_stream.Position;
-        await _publication.OfferAsync(_buffer!, 0, length, cancellationToken: cancellationToken);
+        await _publication.OfferAsync(_buffer, 0, length, cancellationToken: cancellationToken);
 #if DEBUG
         logger.LogDebug("Published game lifetime event");
 #endif
     }
 
     [MemberNotNullWhen(true, nameof(_publication))]
+    [MemberNotNullWhen(true, nameof(_aeron))]
+    [MemberNotNullWhen(true, nameof(_aeronContext))]
+    [MemberNotNullWhen(true, nameof(_buffer))]
+    [MemberNotNullWhen(true, nameof(_stream))]
     private bool PublicationAlive => _publication is { IsClosed: false };
 
     [MemberNotNull(nameof(_publication))]
+    [MemberNotNull(nameof(_aeron))]
+    [MemberNotNull(nameof(_aeronContext))]
+    [MemberNotNull(nameof(_buffer))]
+    [MemberNotNull(nameof(_stream))]
     private void EnsureSocketAlive()
     {
         if (PublicationAlive) return;
