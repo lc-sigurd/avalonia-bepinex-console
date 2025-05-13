@@ -3,28 +3,32 @@
   "isRoot": true,
   "tools": {
     "tcli": {
-      "version": "0.2.3",
+      "version": "0.2.4",
       "commands": [
         "tcli"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-zip": {
       "version": "0.1.220",
       "commands": [
         "dotnet-zip"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-deb": {
       "version": "0.1.220",
       "commands": [
         "dotnet-deb"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-tarball": {
       "version": "0.1.220",
       "commands": [
         "dotnet-tarball"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }
