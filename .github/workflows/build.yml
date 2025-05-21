@@ -39,7 +39,6 @@ jobs:
 
       - name: Restore project
         run: |
-          dotnet restore -c Release
           dotnet tool restore
 
       - name: Build solution
