@@ -13,8 +13,10 @@ using System.IO;
 using System.Linq;
 using BepInEx;
 using BepInEx.Preloader;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using static System.Reflection.Assembly;
 
 namespace Sigurd.AvaloniaBepInExConsole.Patcher;
 
@@ -22,9 +24,30 @@ public static class AvaloniaBepInExPatcher
 {
     private const string AvaloniaConsoleServerAssemblyName = "com.sigurd.avalonia_bepinex_console.server.dll";
 
+    private static string ThisAssemblyPath {
+        get {
+            var path = GetExecutingAssembly().Location;
+            // check for UNC path: https://stackoverflow.com/a/18907418/11045433
+            if (path.StartsWith(new string(Path.DirectorySeparatorChar, 2)))
+                throw new InvalidOperationException("Patcher plugin location should be a local filepath, not UNC");
+            return path;
+        }
+    }
+
+    private static IList<string> MetaLibraryRelativePathParts {
+        get {
+            var relativePath = Path.GetRelativePath(Paths.PatcherPluginPath, ThisAssemblyPath);
+            if (relativePath == ThisAssemblyPath)
+                throw new InvalidOperationException("Patcher plugin should be in the BepInEx patcher plugins directory");
+            var relativePathParts = relativePath.Split(Path.DirectorySeparatorChar).ToList();
+            relativePathParts.RemoveAt(relativePathParts.Count - 1);
+            return relativePathParts;
+        }
+    }
+
     private static readonly IEnumerable<string> AvaloniaConsoleServerAssemblySearchPaths = [
-        Path.Combine(Paths.BepInExAssemblyDirectory, "Sigurd-Avalonia_BepInEx_Console_Server", "AvaloniaBepInExConsole.Server"),
-        Path.Combine(Paths.BepInExAssemblyDirectory, "AvaloniaBepInExConsole.Server"),
+        Path.Combine([Paths.BepInExAssemblyDirectory, ..MetaLibraryRelativePathParts]),
+        Path.Combine(Paths.BepInExAssemblyDirectory, "AvaloniaBepInExConsole"),
         Paths.BepInExAssemblyDirectory,
     ];
 
@@ -33,12 +56,14 @@ public static class AvaloniaBepInExPatcher
         .Select(directoryPath => Path.Combine(directoryPath, AvaloniaConsoleServerAssemblyName))
         .FirstOrDefault(File.Exists);
 
+    [UsedImplicitly]
     public static IEnumerable<string> TargetDLLs => [ Preloader.ConfigEntrypointAssembly.Value ];
 
     /// <summary>
     /// Inserts Avalonia BepInEx Console Server's entrypoint just before BepInEx's Chainloader.
 	/// </summary>
 	/// <param name="assembly">The assembly that the <see cref="AvaloniaBepInExPatcher"/> will attempt to patch.</param>
+	[UsedImplicitly]
 	public static void Patch(AssemblyDefinition assembly)
 	{
         if (AvaloniaConsoleServerAssemblyPath is null)
