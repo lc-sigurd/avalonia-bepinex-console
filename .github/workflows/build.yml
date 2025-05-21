@@ -103,9 +103,8 @@ jobs:
         with:
           dotnet-version: "9"
 
-      - name: Restore project
+      - name: Restore project tools
         run: |
-          dotnet restore -c ReleaseApp
           dotnet tool restore
 
       - name: Build app project
